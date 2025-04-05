@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form class="form" method="post" enctype="multipart/form-data">
+    <div class="form__title">
+      {% if dog %}
+        Редактирование собаки: {{ dog.name }}
+      {% else %}
+        Добавление новой собаки
+      {% endif %}
+    </div>
+    {% csrf_token %}
+    <div class="form__group">
+      {% for field in form %}
+        <div class="form__group-item">
+          <label class="form__group-label" for="{{ field.id_for_label }}">
+            {{ field.label }}
+          </label>
+          <div class="form__group-field">
+            {% if field.name == "photo" %}
+               {% if dog.photo %}
+                <p>На данный момент: {{ dog.photo.name }}</p>
+              {% endif %}
+              <input type="file" name="photo" id="photo">
+            {% else %}
+              {{ field }}
+            {% endif %}
+          </div>
+          {% if field.errors %}
+            <div class="form__group-error">
+              {{ field.errors }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button class="btn form__btn" type="submit">
+        {% if dog %}
+          Сохранить
+        {% else %}
+          Добавить
+        {% endif %}
+      </button>
+    </div>
+  </form>
+{% endblock %}

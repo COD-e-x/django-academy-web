@@ -1,0 +1,16 @@
+<div id="dog-buttons-abort" class="dog-detail__group-btn">
+  <a class="btn dog-detail__-btn dog-detail__btn--abort"
+     hx-post="{% url 'dogs:dog_delete' dog.pk %}"
+     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+  >
+    Да
+  </a>
+  <span style="color: red;">Уверены?</span>
+  <a class="btn dog-detail__btn dog-detail__btn--abort"
+     hx-get="{% url 'dogs:dog_delete_abort' dog.pk %}"
+     hx-target="#dog-buttons-abort"
+     hx-swap="outerHTML"
+  >
+    Нет
+  </a>
+</div>

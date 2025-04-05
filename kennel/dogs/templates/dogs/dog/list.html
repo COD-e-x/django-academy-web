@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load dog_tags %}
+
+{% block content %}
+  {% include 'includes/title-top.html' %}
+  <section class="dog-list">
+    <div class="container">
+      <ul class="dog-list__list">
+        {% for dog in dogs %}
+          <li class="dog-list__item">
+            <img class="dog-list__img" src="{{ dog.photo|dogs_media }}" alt="dog photo">
+            <p class="dog-list__text">{{ dog.name }}</p>
+            <a class="btn dog-list__btn" href="{% url 'dogs:dog_detail' dog.pk %}" type="button">
+              Подробнее
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+{% endblock %}

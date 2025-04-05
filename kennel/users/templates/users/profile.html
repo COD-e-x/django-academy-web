@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load user_tags %}
+
+{% block content %}
+  {% include "includes/title-top.html" %}
+  <section class="user-profile">
+    <div class="container">
+      <div class="user-profile__wrapper">
+        <div class="user-profile__item">
+          <img class="user-profile__img" src="{{ user.profile_picture|user_media }}" alt="dog photo">
+        </div>
+        <div class="user-profile__item user-profile__item-info">
+          <div class="user-profile__group-info">
+            <div class="user-profile__text"><p class="user-profile__text-inner">Имя:</p> {{ user.first_name|default:"Не указано" }}</div>
+            <div class="user-profile__text"><p class="user-profile__text-inner">Фамилия:</p> {{ user.last_name|default:"Не указано" }}</div>
+            <div class="user-profile__text"><p class="user-profile__text-inner">Эл. почта:</p> {{ user.email|default:"Не указано" }}</div>
+            <div class="user-profile__text"><p class="user-profile__text-inner">Телефон:</p> {{ user.phone|default:"Не указано" }}</div>
+            <div class="user-profile__text"><p class="user-profile__text-inner">Телеграм:</p> {{ user.telegram|default:"Не указано" }}</div>
+            <div class="user-profile__text"><p class="user-profile__text-inner">Дата рождения:</p> {{ user.birth_date|default:"Не указано" }}</div>
+            <div class="user-profile__text"><p class="user-profile__text-inner">Адрес:</p> {{ user.address|default:"Не указано" }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

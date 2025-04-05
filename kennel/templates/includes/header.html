@@ -1,0 +1,61 @@
+{% load static %}
+<header class="header">
+  <div class="container">
+    <div class="header__content">
+      <a class="header__logo logo" href="{% url 'dogs:index' %}">
+        <img class="logo__image" src="{% static 'images/logo.svg' %}" alt="logo">
+      </a>
+      <nav class="header__nav">
+        <ul class="header__menu-list--text header__menu-list">
+          <li class="header__menu-item">
+            <a class="header__menu-link {% if request.path == '/' %}header__menu-link--active{% endif %}"
+               href="{% url 'dogs:index' %}">Главная</a>
+          </li>
+          <li class="header__menu-item">
+            <a class="header__menu-link {% if request.path == '/breeds/' %}header__menu-link--active{% endif %}"
+               href="{% url 'dogs:breeds' %}">Породы</a>
+          </li>
+          <li class="header__menu-item">
+            <a class="header__menu-link {% if request.path == '/dogs/' %}header__menu-link--active{% endif %}"
+               href="{% url 'dogs:dogs_list' %}">Собаки</a>
+          </li>
+        </ul>
+        <div class="header__user-info">
+          {% if user.is_authenticated %}
+            <div class="header__user-info--auth">
+              <a class="header__icon--user-profile header__menu-link" href="{% url 'users:profile' %}">
+                <small class="header__icon-image">
+                  {{ user.email }}
+                </small></a>
+            </div>
+          {% endif %}
+          <ul class="header__menu-list--icon header__menu-list">
+            {% if user.is_authenticated %}
+              <li class="header__menu-item">
+                <a class="header__icon--dog-add header__icon" href="{% url 'dogs:dog_create' %}">
+                  <img class="header__icon-image" src="{% static 'images/icons/dog-add.svg' %}" alt="dog add">
+                </a>
+              </li>
+              <li class="header__menu-item">
+                <a class="header__icon--logout header__icon" href="{% url 'users:logout' %}">
+                  <img class="header__icon-image" src="{% static 'images/icons/logout.svg' %}" alt="logout">
+                </a>
+              </li>
+            {% else %}
+              <li class="header__menu-item">
+                <a class="header__icon--user-add header__icon" href="{% url 'users:register' %}">
+                  <img class="header__icon-image" src="{% static 'images/icons/user-add.svg' %}" alt="user add">
+                </a>
+              </li>
+              <li class="header__menu-item">
+                <a class="header__icon--login header__icon" href="{% url 'users:login' %}">
+                  <img class="header__icon-image" src="{% static 'images/icons/login.svg' %}" alt="login">
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>

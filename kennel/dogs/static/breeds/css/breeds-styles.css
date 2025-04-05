@@ -1,0 +1,64 @@
+/*===== breed list ===================================================================================================*/
+
+.breeds-list {
+    background-color: #EFF2F6;
+}
+
+.breeds-list__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    text-align: left;
+    padding: 35px 0 50px 0;
+}
+
+.breeds-list__item {
+    min-width: 70%;
+    display: flex;
+    flex-direction: column;
+    /*flex-wrap: wrap;*/
+    justify-content: space-between;
+    align-items: flex-start;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    padding: 5px;
+    background-color: #fff;
+}
+
+.breeds-list__img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+}
+
+.breed-list__description {
+    width: 100%;
+    height: 100%;
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+.breeds-list__group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 950px) {
+    .breeds--list__list {
+        grid-template-columns: repeat(2, 1fr);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.breeds-list__text {
+    font-family: "Segoe UI", system-ui, sans-serif, sans-serif;
+    margin: 10px 5px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+}

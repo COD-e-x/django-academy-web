@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load breed_tags %}
+
+{% block content %}
+  {% include 'includes/title-top.html' %}
+  <section class="breeds-list">
+    <div class="container">
+      <ul class="breeds-list__list">
+        {% for breed in breeds %}
+          <li class="breeds-list__item">
+            <img class="breeds-list__img" src="{{ breed.photo|breeds_media }}" alt="breed photo">
+            <div class="breed-list__description">{{ breed.description }}</div>
+            <div class="breeds-list__group">
+            <p class="breeds-list__text">{{ breed.name }}</p>
+            <a class="btn breeds-list__btn" href="{% url 'dogs:dogs_by_breed' breed.pk %}" type="button">
+              К собакам
+            </a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+{% endblock %}

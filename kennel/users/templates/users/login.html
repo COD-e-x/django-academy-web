@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+  <form class="form"
+        method="post"
+  >
+    <div class=" form__title">
+      Войдите в свою учетную запись
+    </div>
+    {% csrf_token %}
+    <div class="form__group">
+      {% for field in form %}
+        <div class="form__group-item">
+          <label class="form__group-field-label"
+          >
+            {{ field.label }}
+          </label>
+          <div class="form__group-field">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <div class="form__group-error">
+              {{ field.errors }}
+            </div>
+          {% endif %}
+          {% if field.name == "password" and  form.non_field_errors %}
+            <div class="form__group-error">
+              {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button class="btn form__btn" type="submit">
+        Войти
+      </button>
+    </div>
+  </form>
+{% endblock %}

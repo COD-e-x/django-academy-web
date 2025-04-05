@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load dog_tags %}
+
+{% block content %}
+  {% include 'includes/title-top.html' %}
+  <section class="dog-detail">
+    <div class="container">
+      <div class="dog-detail__wrapper">
+        <div class="dog-detail__item">
+          <img class="dog-detail__img" src="{{ dog.photo|dogs_media }}" alt="dog photo">
+          <div class="dog-detail__group-info">
+            <p>{{ breed_name }}</p>
+            <p class="dog-detail__text">
+              {{ dog.name }}
+            </p>
+            <p
+              class="dog-detail__text--birth_date">{{ dog.birth_date|default:""|date:"d F Y" }}
+            </p>
+          </div>
+          {% include 'dogs/dog_includes/dog-detail-buttons.html' %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

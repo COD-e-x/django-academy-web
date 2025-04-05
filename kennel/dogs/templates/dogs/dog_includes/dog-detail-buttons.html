@@ -1,0 +1,12 @@
+<div id="dog-buttons" class="dog-detail__group-btn">
+  <a class="btn dog-detail__item-btn" href="{% url 'dogs:dog_update' dog.pk %}" type="button">
+    Редактировать
+  </a>
+  <a class="btn dog-detail__item-btn"
+     hx-get="{% url 'dogs:dog_delete_confirm' dog.pk %}"
+     hx-target="#dog-buttons"
+     hx-swap="outerHTML"
+  >
+    Удалить
+  </a>
+</div>

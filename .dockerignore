@@ -1,0 +1,50 @@
+# Файлы Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Виртуальные окружения
+venv/
+../.venv/
+env/
+.env/
+venv*/
+.venv*/
+env*/
+.env*/
+
+# Системные и IDE-файлы
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitmodules
+.gitattributes
+
+# Файлы зависимостей
+node_modules/
+bower_components/
+
+# Конфиги и секреты
+.env
+*.env
+secrets/
+credentials/
+config.local.*
+
+# Документация и тестовые данные
+docs/
+tests/
+test_data/
+
+# Docker-специфичные файлы (чтобы избежать рекурсии)
+docker-compose.override.yml
+.dockerignore
