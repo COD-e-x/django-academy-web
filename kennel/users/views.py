@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 
 from .forms import UserRegisterForm, UserLoginForm
 
 
 def user_register(request):
-    form = UserRegisterForm(request.POST or None)
+    form = UserRegisterForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
             new_user = form.save(commit=False)
@@ -13,7 +13,6 @@ def user_register(request):
             new_user.save()
             return redirect("users:login")
     context = {
-        "title": "Создать аккаунт",
         "form": form,
     }
     return render(

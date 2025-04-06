@@ -43,10 +43,6 @@ class UserRegisterForm(forms.ModelForm):
     def clean_email(self):
         """Валидация email"""
         email = self.cleaned_data.get("email").strip().lower()
-        try:
-            validate_email(email)
-        except ValidationError:
-            raise ValidationError("Некорректный email!")
         if User.objects.filter(email=email).exists():
             raise ValidationError("Этот email уже зарегистрирован!")
         return email
