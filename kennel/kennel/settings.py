@@ -32,7 +32,26 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
-CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "http://127.0.0.1:8000").split(",")
+
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "https://cod-ex.ru").split(",")
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
+# # Указывает Django использовать HTTPS при генерации ссылок и перенаправлении
+SECURE_SSL_REDIRECT = not DEBUG # Перенаправляет на HTTPS
+#
+# # Указывает Django использовать заголовок HTTP Strict Transport Security (HSTS)
+# SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # Включает HSTS на 1 год
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG  # Включает для поддоменов
+# SECURE_HSTS_PRELOAD = not DEBUG  # Для включения в preload list браузеров
+#
+# # Указывает браузерам отправлять куки только через защищенное HTTPS-соединение
+# SESSION_COOKIE_SECURE = not DEBUG # Куки только через HTTPS
+# CSRF_COOKIE_SECURE = not DEBUG # CSRF-токен только через HTTPS
+#
+# # Указывает Django использовать безопасные куки
+SECURE_BROWSER_XSS_FILTER = not DEBUG # Включает XSS-фильтр (устаревшее, но не мешает)
+SECURE_CONTENT_TYPE_NOSNIFF = not DEBUG  # Защита от MIME-type атак
 
 
 # Application definition
