@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from .forms import UserRegisterForm, UserLoginForm
 
@@ -45,7 +46,7 @@ def user_login(request):
         context,
     )
 
-
+@login_required(login_url='users:login')
 def user_profile(request):
     context = {
         "title": f"Ваш профиль",

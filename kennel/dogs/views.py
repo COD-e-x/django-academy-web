@@ -2,6 +2,7 @@ import os
 
 from django.http import HttpResponse
 from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from .models import Breed, Dog
 from .forms import DogForm
@@ -94,6 +95,7 @@ def dog_detail(request, pk: int):
     )
 
 
+@login_required(login_url='users:login')
 def dog_update(request, pk: int):
     """Обновляет данные у собаки."""
     dog_object = get_object_or_404(Dog, pk=pk)
@@ -118,6 +120,7 @@ def dog_update(request, pk: int):
     )
 
 
+@login_required(login_url='users:login')
 def dog_delete_confirm(request, pk: int):
     """Показывает кнопки подтверждения удаления."""
     dog_object = get_object_or_404(Dog, pk=pk)
