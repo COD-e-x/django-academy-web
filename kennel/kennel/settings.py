@@ -38,7 +38,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "https://cod-ex.
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 
 # # Указывает Django использовать HTTPS при генерации ссылок и перенаправлении
-SECURE_SSL_REDIRECT = not DEBUG # Перенаправляет на HTTPS
+# SECURE_SSL_REDIRECT = not DEBUG # Перенаправляет на HTTPS
 #
 # # Указывает Django использовать заголовок HTTP Strict Transport Security (HSTS)
 # SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # Включает HSTS на 1 год
@@ -50,8 +50,8 @@ SECURE_SSL_REDIRECT = not DEBUG # Перенаправляет на HTTPS
 # CSRF_COOKIE_SECURE = not DEBUG # CSRF-токен только через HTTPS
 #
 # # Указывает Django использовать безопасные куки
-SECURE_BROWSER_XSS_FILTER = not DEBUG # Включает XSS-фильтр (устаревшее, но не мешает)
-SECURE_CONTENT_TYPE_NOSNIFF = not DEBUG  # Защита от MIME-type атак
+# SECURE_BROWSER_XSS_FILTER = not DEBUG # Включает XSS-фильтр (устаревшее, но не мешает)
+# SECURE_CONTENT_TYPE_NOSNIFF = not DEBUG  # Защита от MIME-type атак
 
 
 # Application definition
@@ -154,7 +154,6 @@ STATIC_ROOT = os.path.join(BASE_DIR.parent, "static")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-# MEDIA_ROOT = BASE_DIR / "media"
 
 
 # Default primary key field type

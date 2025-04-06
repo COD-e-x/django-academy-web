@@ -97,9 +97,13 @@ def dog_detail(request, pk: int):
 def dog_update(request, pk: int):
     """Обновляет данные у собаки."""
     dog_object = get_object_or_404(Dog, pk=pk)
+    file_path = dog_object.photo.path
     if request.method == "POST":
         form = DogForm(request.POST, request.FILES, instance=dog_object)
         if form.is_valid():
+            if 'photo' in request.FILES:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
             dog_object = form.save()
             dog_object.save()
             return redirect(reverse("dogs:dog_detail", args=[pk]))
