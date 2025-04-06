@@ -33,5 +33,5 @@ build/
 *.env
 .env.prod
 
-# Мои записи
+# Записи
 Notes/

@@ -48,3 +48,6 @@ test_data/
 # Docker-специфичные файлы (чтобы избежать рекурсии)
 docker-compose.override.yml
 .dockerignore
+
+# Записи
+Notes/

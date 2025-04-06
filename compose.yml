@@ -18,7 +18,7 @@ services:
       - db
     volumes:
       - ./static:/app/static
-      - ./kennel/media:/app/media
+      - ./kennel/media:/app/kennel/media
     env_file:
       - ./.env
 
@@ -33,5 +33,6 @@ services:
       - ./kennel/media:/media:ro
     depends_on:
       - web
+
 volumes:
   postgres_data:
