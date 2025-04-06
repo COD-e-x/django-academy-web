@@ -1,11 +1,9 @@
-import re
-
 from django import forms
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 from django.contrib.auth import authenticate
 
 from .models import User
+from .validators import PasswordValidator
 
 
 class UserRegisterForm(forms.ModelForm):
@@ -26,20 +24,16 @@ class UserRegisterForm(forms.ModelForm):
         fields = ("email",)
 
     def clean_password(self):
-        """Валидация пароля (только английские буквы)."""
+        """Валидация пароля."""
         password = self.cleaned_data.get("password")
-        if not re.fullmatch(r"[A-Za-z0-9@#$%^&+=!*()-]+", password):
-            raise ValidationError("Пароль должен содержать английские буквы, цифры или %^&+=!*()-!")
-        return password
+        return PasswordValidator.validate_password(password)
 
     def clean_password2(self):
         """Валидация пароля."""
         cd = self.cleaned_data
-        password1 = cd.get("password")
-        password2 = cd.get("password2")
-        if password1 != password2:
+        if cd.get("password") != cd.get("password2"):
             raise ValidationError("Пароли не совпадают!")
-        return password2
+        return cd["password2"]
 
     def clean_email(self):
         """Валидация email"""
@@ -58,31 +52,25 @@ class UserLoginForm(forms.Form):
         min_length=8,
     )
 
-    def clean_email(self):
-        """Валидация email"""
-        email = self.cleaned_data.get("email").strip().lower()
-        try:
-            validate_email(email)
-        except ValidationError:
-            raise ValidationError("Некорректный email!")
-        return email
-
-    def clean(self):
+    def authenticate_user(self):
         """Проверка на существование пользователя в базе данных."""
-        cleaned_data = super().clean()
-        email = cleaned_data.get("email")
-        password = cleaned_data.get("password")
-        if email and password:
-            user = authenticate(email=email, password=password)
-            if not user:
-                raise ValidationError("Неверный email или пароль!")
-            if not user.is_active:
-                raise ValidationError("Этот аккаунт заблокирован!")
-        return cleaned_data
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
+        if not email or not password:
+            return None
+        user = authenticate(email=email, password=password)  # Стандартный метод Django
+        if not user:
+            self.add_error(None, "Неверный email или пароль!")
+            return None
+        if not user.is_active:
+            self.add_error(None, "Аккаунт деактивирован!")
+            return None
+        return user
 
 
 class UserForm(forms.ModelForm):
     """Форма для пользователя."""
+
     class Meta:
         model = User
         fields = "__all__"

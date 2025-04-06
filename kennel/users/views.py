@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
 from .forms import UserRegisterForm, UserLoginForm
@@ -35,24 +35,19 @@ def user_login(request):
     form = UserLoginForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
-            email = form.cleaned_data["email"]
-            password = form.cleaned_data["password"]
-            user = authenticate(
-                request,
-                email=email,
-                password=password,
-            )
+            user = form.authenticate_user()
             if user:
                 login(request, user)
-                return redirect("users:profile")
+            return redirect("users:profile")
     context = {
-        "form": form,
+        'form': form
     }
     return render(
         request,
         "users/login.html",
         context,
     )
+
 
 @login_required(login_url='users:login')
 def user_profile(request):
