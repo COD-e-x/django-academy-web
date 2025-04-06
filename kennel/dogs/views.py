@@ -69,7 +69,7 @@ def dog_create(request):
             form.save()
             return redirect("dogs:dogs_list")
     context = {
-        "form": DogForm()
+        "form": form
     }
     return render(
         request,

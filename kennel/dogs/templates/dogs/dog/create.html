@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <form class="form" method="post" enctype="multipart/form-data">
+  <form class="form"
+        method="post"
+        enctype="multipart/form-data"
+  >
     <div class="form__title">
       {% if dog %}
         Редактирование собаки: {{ dog.name }}
