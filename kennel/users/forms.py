@@ -9,6 +9,7 @@ from .models import User
 
 
 class UserRegisterForm(forms.ModelForm):
+    """Форма регистрации пользователя."""
     password = forms.CharField(
         label="Пароль",
         widget=forms.PasswordInput,
@@ -49,6 +50,7 @@ class UserRegisterForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
+    """Форма авторизации пользователя."""
     email = forms.EmailField()
     password = forms.CharField(
         label="Пароль",
@@ -80,6 +82,7 @@ class UserLoginForm(forms.Form):
 
 
 class UserForm(forms.ModelForm):
+    """Форма для пользователя."""
     class Meta:
         model = User
         fields = "__all__"

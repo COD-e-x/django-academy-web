@@ -5,6 +5,7 @@ NULLABLE_FOR_STRING = {"null": False, "blank": True}
 
 
 class Breed(models.Model):
+    """Модель для породы."""
     name = models.CharField(
         max_length=100,
         verbose_name="Порода",
@@ -29,6 +30,7 @@ class Breed(models.Model):
 
 
 class Dog(models.Model):
+    """Модель для собаки."""
     name = models.CharField(
         max_length=250,
         verbose_name="Имя",

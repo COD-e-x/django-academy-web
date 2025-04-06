@@ -6,6 +6,7 @@ NULLABLE_FOR_STRING = {"null": False, "blank": True}
 
 
 class User(AbstractUser):
+    """Модель для пользователя."""
     username = None
     first_name = models.CharField(
         max_length=30,

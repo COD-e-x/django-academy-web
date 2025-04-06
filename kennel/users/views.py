@@ -6,6 +6,10 @@ from .forms import UserRegisterForm, UserLoginForm
 
 
 def user_register(request):
+    """
+    Регистрация нового пользователя.
+    Сохраняет пользователя, если форма валидна, и перенаправляет на страницу входа.
+    """
     form = UserRegisterForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
@@ -24,6 +28,10 @@ def user_register(request):
 
 
 def user_login(request):
+    """
+    Вход пользователя в систему.
+    Проверяет данные формы и аутентифицирует пользователя, если данные верны.
+    """
     form = UserLoginForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
@@ -48,6 +56,10 @@ def user_login(request):
 
 @login_required(login_url='users:login')
 def user_profile(request):
+    """
+    Профиль пользователя.
+    Отображает страницу профиля для авторизованных пользователей.
+    """
     context = {
         "title": f"Ваш профиль",
     }
@@ -59,5 +71,9 @@ def user_profile(request):
 
 
 def user_logout(request):
+    """
+    Выход пользователя.
+    Завершающий сеанс и перенаправление на главную страницу.
+    """
     logout(request)
     return redirect("dogs:index")
