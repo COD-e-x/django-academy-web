@@ -300,8 +300,8 @@ input::-ms-clear {
 }
 
 .form__group-label {
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 0.9rem;
+    font-weight: 600;
     margin-bottom: 5px;
 }
 
@@ -315,7 +315,7 @@ input::-ms-clear {
 
 .form__group-error {
     color: red;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .form__btn {
