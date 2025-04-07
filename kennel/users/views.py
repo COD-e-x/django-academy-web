@@ -1,8 +1,11 @@
+import os
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from .forms import UserRegisterForm, UserLoginForm
+from .forms import UserRegisterForm, UserLoginForm, UserUpdateForm
 
 
 def user_register(request):
@@ -28,19 +31,19 @@ def user_register(request):
 
 
 def user_login(request):
-    """
-    Вход пользователя в систему.
-    Проверяет данные формы и аутентифицирует пользователя, если данные верны.
-    """
     form = UserLoginForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
-            user = form.authenticate_user()
+            user = authenticate(
+                request,
+                email=form.cleaned_data["email"],
+                password=form.cleaned_data["password"],
+            )
             if user:
                 login(request, user)
-            return redirect("users:profile")
+                return redirect("users:profile")
     context = {
-        'form': form
+        "form": form,
     }
     return render(
         request,
@@ -49,7 +52,7 @@ def user_login(request):
     )
 
 
-@login_required(login_url='users:login')
+@login_required(login_url="users:login")
 def user_profile(request):
     """
     Профиль пользователя.
@@ -61,6 +64,39 @@ def user_profile(request):
     return render(
         request,
         "users/profile.html",
+        context,
+    )
+
+
+@login_required(login_url="users:login")
+def user_update(request):
+    user_object = request.user
+    if user_object.profile_picture:
+        file_path = user_object.profile_picture.path
+    else:
+        file_path = None
+    if request.method == "POST":
+        form = UserUpdateForm(request.POST, request.FILES, instance=user_object)
+        if form.is_valid():
+            if "profile_picture" in request.FILES:
+                if file_path:
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+            user_object = form.save(commit=False)
+            user_object.save()
+            if "HX-Request" in request.headers:
+                response = HttpResponse()
+                response["HX-Redirect"] = "/users/profile/"
+                return response
+        else:
+            return render(request, "users/user_includes/update.html", {"form": form})
+    context = {
+        "object": user_object,
+        "form": UserUpdateForm(instance=user_object),
+    }
+    return render(
+        request,
+        "users/user_includes/update.html",
         context,
     )
 

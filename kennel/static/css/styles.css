@@ -307,7 +307,7 @@ input::-ms-clear {
 
 .form__group-field input, select, textarea {
     width: 100%;
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
@@ -322,7 +322,7 @@ input::-ms-clear {
     background-color: #165cc6;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 5px 15px;
     margin: 0 auto;
     font-size: 1rem;
     box-shadow: 0 0 2px rgba(0, 0, 0, 1);

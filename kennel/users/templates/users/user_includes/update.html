@@ -1,0 +1,51 @@
+{% load user_tags %}
+<form id="user-update-form"
+      class="form"
+      method="post"
+      action="{% url 'users:update' %}"
+      enctype="multipart/form-data"
+      hx-post="{% url 'users:update' %}"
+      hx-swap="outerHTML"
+>
+  <div class=" form__title">
+    Изменение учетной записи
+  </div>
+  {% csrf_token %}
+  <div class="form__group">
+    {% for field in form %}
+      <div class="form__group-item">
+        <label class="form__group-label"
+        >
+            {{ field.label }}:
+          </label>
+        <div class="form__group-field">
+          {% if field.name == "profile_picture" %}
+            {% if user.profile_picture %}
+              <p>На данный момент: {{ user.profile_picture.name|shorten_filename:12 }}</p>
+            {% endif %}
+            <input type="file" name="profile_picture" id="photo">
+          {% else %}
+            {{ field }}
+          {% endif %}
+        </div>
+        {% if field.errors %}
+          <div class="form__group-error">
+            {{ field.errors }}
+          </div>
+        {% endif %}
+        {% if field.name == "password" and  form.non_field_errors %}
+          <div class="form__group-error">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button class="btn form__btn"
+            type="submit"
+    >
+      Сохранить
+    </button>
+  </div>
+</form>

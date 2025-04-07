@@ -9,16 +9,51 @@
         <div class="user-profile__item">
           <img class="user-profile__img" src="{{ user.profile_picture|user_media }}" alt="dog photo">
         </div>
-        <div class="user-profile__item user-profile__item-info">
+        <div id="user-update"
+             class="user-profile__item user-profile__item-info"
+        >
           <div class="user-profile__group-info">
-            <div class="user-profile__text"><p class="user-profile__text-inner">Имя:</p> {{ user.first_name|default:"Не указано" }}</div>
-            <div class="user-profile__text"><p class="user-profile__text-inner">Фамилия:</p> {{ user.last_name|default:"Не указано" }}</div>
-            <div class="user-profile__text"><p class="user-profile__text-inner">Эл. почта:</p> {{ user.email|default:"Не указано" }}</div>
-            <div class="user-profile__text"><p class="user-profile__text-inner">Телефон:</p> {{ user.phone|default:"Не указано" }}</div>
-            <div class="user-profile__text"><p class="user-profile__text-inner">Телеграм:</p> {{ user.telegram|default:"Не указано" }}</div>
-            <div class="user-profile__text"><p class="user-profile__text-inner">Дата рождения:</p> {{ user.birth_date|default:"Не указано" }}</div>
-            <div class="user-profile__text"><p class="user-profile__text-inner">Адрес:</p> {{ user.address|default:"Не указано" }}</div>
+            <div class="user-profile__text">
+              <p class="user-profile__text-inner">Имя:</p>
+              {{ user.first_name|default:"Не указано" }}
+            </div>
+            <div class="user-profile__text">
+              <p class="user-profile__text-inner">Фамилия:</p>
+              {{ user.last_name|default:"Не указано" }}
+            </div>
+            <div class="user-profile__text">
+              <p class="user-profile__text-inner">Эл.почта:</p>
+              {{ user.email|default:"Не указано" }}
+            </div>
+            <div class="user-profile__text">
+              <p class="user-profile__text-inner">Телефон:</p>
+              {{ user.phone|default:"Не указано" }}
+            </div>
+            <div class="user-profile__text">
+              <p class="user-profile__text-inner">Телеграм:</p>
+              {{ user.telegram|default:"Не указано" }}
+            </div>
+            <div class="user-profile__text">
+              <p class="user-profile__text-inner">Дата рождения:</p>
+              {{ user.birth_date|default:"Не указано" }}
+            </div>
+            <div class="user-profile__text">
+              <p class="user-profile__text-inner">Пол:</p>
+              {{ user.get_gender_display|default:"Не указано" }}
+            </div>
+            <div class="user-profile__text">
+              <p class="user-profile__text-inner">Адрес:</p>
+              {{ user.address|default:"Не указано" }}
+            </div>
           </div>
+          <a id="user-profile--btn"
+             class="btn form__btn"
+             hx-get="{% url 'users:update' %}"
+             hx-target="#user-update"
+             hx-swap="innerHTML"
+          >
+            Изменить
+          </a>
         </div>
       </div>
     </div>
