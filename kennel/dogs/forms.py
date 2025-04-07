@@ -7,6 +7,7 @@ from .models import Dog
 
 class DogForm(forms.ModelForm):
     """Форма дял собак."""
+
     class Meta:
         model = Dog
         fields = "__all__"

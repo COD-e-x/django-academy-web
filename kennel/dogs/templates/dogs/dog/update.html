@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
+{% load dog_tags %}
 
 {% block content %}
-  <form class="form" method="post" enctype="multipart/form-data">
+  <form class="form"
+        method="post"
+        enctype="multipart/form-data">
     <div class="form__title">
       {% if dog %}
         Редактирование собаки: {{ dog.name }}
@@ -18,8 +21,8 @@
           </label>
           <div class="form__group-field">
             {% if field.name == "photo" %}
-               {% if dog.photo %}
-                <p>На данный момент: {{ dog.photo.name }}</p>
+              {% if dog.photo %}
+                <p>На данный момент: {{ dog.photo.name|shorten_filename:12 }}</p>
               {% endif %}
               <input type="file" name="photo" id="photo">
             {% else %}

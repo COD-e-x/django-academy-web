@@ -70,7 +70,7 @@ def dog_create(request):
             form.save()
             return redirect("dogs:dogs_list")
     context = {
-        "form": form
+        "form": form,
     }
     return render(
         request,
@@ -95,7 +95,7 @@ def dog_detail(request, pk: int):
     )
 
 
-@login_required(login_url='users:login')
+@login_required(login_url="users:login")
 def dog_update(request, pk: int):
     """Обновляет данные у собаки."""
     dog_object = get_object_or_404(Dog, pk=pk)
@@ -103,10 +103,10 @@ def dog_update(request, pk: int):
     if request.method == "POST":
         form = DogForm(request.POST, request.FILES, instance=dog_object)
         if form.is_valid():
-            if 'photo' in request.FILES:
+            if "photo" in request.FILES:
                 if os.path.exists(file_path):
                     os.remove(file_path)
-            dog_object = form.save()
+            dog_object = form.save(commit=False)
             dog_object.save()
             return redirect(reverse("dogs:dog_detail", args=[pk]))
     context = {
@@ -120,7 +120,7 @@ def dog_update(request, pk: int):
     )
 
 
-@login_required(login_url='users:login')
+@login_required(login_url="users:login")
 def dog_delete_confirm(request, pk: int):
     """Показывает кнопки подтверждения удаления."""
     dog_object = get_object_or_404(Dog, pk=pk)
