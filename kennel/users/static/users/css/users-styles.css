@@ -69,11 +69,34 @@
     opacity: 40%;
 }
 
-#user-profile--btn {
-    margin-top: 10px;
-    padding: 5px 10px;
-}
 
+/* форма */
 #user-update-form {
     margin: 0;
+}
+
+/*ссылка на изменения*/
+.user-profile__group-links {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.user-link {
+    margin: 0.3vw 0;
+    padding: 0.7vw 1.3vw;
+    border: 2px solid #d6d6da;
+    border-radius: 10px;
+}
+
+.user-link:hover {
+    background-color: rgba(196, 198, 205, 0.77);
+}
+
+.user-link__text {
+    color: #151515;
+    font-weight: 700;
+    position: relative;
+    letter-spacing: 1.2px;
+
 }

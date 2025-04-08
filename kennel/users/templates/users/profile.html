@@ -46,14 +46,27 @@
               {{ user.address|default:"Не указано" }}
             </div>
           </div>
-          <a id="user-profile--btn"
-             class="btn form__btn"
-             hx-get="{% url 'users:update' %}"
-             hx-target="#user-update"
-             hx-swap="innerHTML"
-          >
-            Изменить
-          </a>
+          <div class="user-profile__group-links">
+            <a class="user-link"
+               hx-get="{% url 'users:update' %}"
+               hx-target="#user-update"
+               hx-swap="innerHTML"
+            >
+              <small class="user-link__text">
+                Изменить данные
+              </small>
+            </a>
+
+            <a class="user-link"
+               hx-get="{% url 'users:password_change' %}"
+               hx-target="#user-update"
+               hx-swap="innerHTML"
+            >
+              <small class="user-link__text">
+                Сменить пароль
+              </small>
+            </a>
+          </div>
         </div>
       </div>
     </div>

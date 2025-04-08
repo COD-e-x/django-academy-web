@@ -2,10 +2,20 @@ import os
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import (
+    authenticate,
+    login,
+    logout,
+    update_session_auth_hash,
+)
 from django.contrib.auth.decorators import login_required
 
-from .forms import UserRegisterForm, UserLoginForm, UserUpdateForm
+from .forms import (
+    UserRegisterForm,
+    UserLoginForm,
+    UserUpdateForm,
+    UserPasswordChangeForm,
+)
 
 
 def user_register(request):
@@ -31,6 +41,10 @@ def user_register(request):
 
 
 def user_login(request):
+    """
+    Вход пользователя.
+    Аутентифицирует пользователя и перенаправляет в профиль при успешном входе.
+    """
     form = UserLoginForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
@@ -70,6 +84,11 @@ def user_profile(request):
 
 @login_required(login_url="users:login")
 def user_update(request):
+    """
+    Обновление данных пользователя.
+    Позволяет обновить профиль, включая фото.
+    Удаляет старую фотографию при загрузке новой.
+    """
     user_object = request.user
     if user_object.profile_picture:
         file_path = user_object.profile_picture.path
@@ -97,6 +116,32 @@ def user_update(request):
     return render(
         request,
         "users/user_includes/update.html",
+        context,
+    )
+
+
+@login_required(login_url="users:login")
+def password_change(request):
+    """
+    Смена пароля пользователя.
+    Обновляет пароль и сессию при успешной валидации формы.
+    """
+    user_object = request.user
+    form = UserPasswordChangeForm(user_object, request.POST)
+    if request.method == "POST":
+        if form.is_valid():
+            user_object = form.save()
+            update_session_auth_hash(request, user_object)
+            if "HX-Request" in request.headers:
+                response = HttpResponse()
+                response["HX-Redirect"] = "/users/profile/"
+                return response
+    context = {
+        "form": form,
+    }
+    return render(
+        request,
+        "users/user_includes/password_change.html",
         context,
     )
 

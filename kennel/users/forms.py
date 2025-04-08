@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
 from django.utils import timezone
+from django.contrib.auth.forms import PasswordChangeForm
 
 from .models import User
 from .validators import (
@@ -153,3 +154,9 @@ class UserUpdateForm(forms.ModelForm):
                 "Файл должен быть изображением в формате .jpg, .jpeg, .png."
             )
         return photo
+
+
+class UserPasswordChangeForm(PasswordChangeForm):
+    """Форма для смены пароля."""
+
+    pass

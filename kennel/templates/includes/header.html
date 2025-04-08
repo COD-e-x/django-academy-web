@@ -23,7 +23,7 @@
         <div class="header__user-info">
           {% if user.is_authenticated %}
             <div class="header__user-info--auth">
-              <a class="header__icon--user-profile header__menu-link" href="{% url 'users:profile' %}">
+              <a class="header__menu-link" href="{% url 'users:profile' %}">
                 <small class="header__icon-image">
                   {{ user.email }}
                 </small></a>

@@ -12,5 +12,6 @@ urlpatterns = [
     path("register/", views.user_register, name="register"),
     path("profile/", views.user_profile, name="profile"),
     path("profile/update/", views.user_update, name="update"),
+    path("profile/password_change/", views.password_change, name="password_change"),
     path("logout/", views.user_logout, name="logout"),
 ]
