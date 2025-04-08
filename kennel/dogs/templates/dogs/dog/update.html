@@ -16,9 +16,19 @@
     <div class="form__group">
       {% for field in form %}
         <div class="form__group-item">
-          <label class="form__group-label" for="{{ field.id_for_label }}">
-            {{ field.label }}:
-          </label>
+          {% if field.name == "photo" %}
+            <label class="form__group-label" for="{{ field.id_for_label }}">
+              {{ field.label }}:{% if field.field.required %} *{% endif %}
+            </label>
+            <small id="form-dog__requirements"
+                   class="form__group-labels-requirements">
+              <br>* размер фото не более: 5MB, разрешённые форматы: .jpg, .jpeg, .png.
+            </small>
+          {% else %}
+            <label class="form__group-label" for="{{ field.id_for_label }}">
+              {{ field.label }}:{% if field.field.required %} *{% endif %}
+            </label>
+          {% endif %}
           <div class="form__group-field">
             {% if field.name == "photo" %}
               {% if dog.photo %}

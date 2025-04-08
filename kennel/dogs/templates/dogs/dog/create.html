@@ -20,14 +20,17 @@
             <label class="form__group-labels">
               {{ field.label }}:
             </label>
-            <small id="form-dog__requirements" class="form__group-labels-requirements"> <br>* размер фото не более: 5MB, разрешённые форматы: .jpg, .jpeg, .png.</small>
+            <small id="form-dog__requirements"
+                   class="form__group-labels-requirements">
+              <br>* размер фото не более: 5MB, разрешённые форматы: .jpg, .jpeg, .png.
+            </small>
           {% else %}
             <label class="form__group-label">
-              {{ field.label }}:
+              {{ field.label }}:{% if field.field.required %} *{% endif %}
             </label>
           {% endif %}
           <div class="form__group-field">
-              {{ field }}
+            {{ field }}
           </div>
           {% if field.errors %}
             <div class="form__group-error">

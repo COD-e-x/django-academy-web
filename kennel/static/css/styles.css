@@ -316,6 +316,11 @@ input::-ms-clear {
     font-size: 13px;
 }
 
+.form__group-btn {
+    display: flex;
+    justify-content: space-between;
+}
+
 .form__btn {
     background-color: #165cc6;
     color: white;

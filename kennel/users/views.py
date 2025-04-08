@@ -23,7 +23,7 @@ def user_register(request):
     Регистрация нового пользователя.
     Сохраняет пользователя, если форма валидна, и перенаправляет на страницу входа.
     """
-    form = UserRegisterForm(request.POST)
+    form = UserRegisterForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             new_user = form.save(commit=False)
@@ -45,7 +45,7 @@ def user_login(request):
     Вход пользователя.
     Аутентифицирует пользователя и перенаправляет в профиль при успешном входе.
     """
-    form = UserLoginForm(request.POST)
+    form = UserLoginForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             user = authenticate(
@@ -127,7 +127,7 @@ def password_change(request):
     Обновляет пароль и сессию при успешной валидации формы.
     """
     user_object = request.user
-    form = UserPasswordChangeForm(user_object, request.POST)
+    form = UserPasswordChangeForm(user_object or None, request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             user_object = form.save()

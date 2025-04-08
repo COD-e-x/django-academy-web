@@ -11,9 +11,8 @@
     <div class="form__group">
       {% for field in form %}
         <div class="form__group-item">
-            <label class="form__group-label"
-            >
-              {{ field.label }}:
+            <label class="form__group-label">
+              {{ field.label }}:{% if field.field.required %} *{% endif %}
             </label>
           <div class="form__group-field">
               {{ field }}
