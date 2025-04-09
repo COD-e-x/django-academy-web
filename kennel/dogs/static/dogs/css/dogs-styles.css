@@ -14,6 +14,8 @@
 
 
 .dog-list__item {
+    max-width: 400px;
+    min-width: 200px;
     display: flex;
     /*flex-direction: column;*/
     flex-wrap: wrap;
@@ -75,14 +77,14 @@
     width: 100%;
 }
 
-.dog-detail__text {
-    margin-bottom: 5px;
-    letter-spacing: 0.8px;
-    font-weight: 600;
+.dog-detail__group-text {
+    display: block;
+
 }
 
-.dog-detail__text--birth_date {
-    font-style: italic;
+#dog-detail__group-text {
+    font-family: Arial, sans-serif;
+    line-height: 1;
 }
 
 /*dogs/dog_includes/dog-detail-buttons.html*/
