@@ -1,4 +1,6 @@
 import os
+import random
+import string
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -8,13 +10,20 @@ from django.contrib.auth import (
     logout,
     update_session_auth_hash,
 )
+
 from django.contrib.auth.decorators import login_required
 
+from .models import User
 from .forms import (
     UserRegisterForm,
     UserLoginForm,
     UserUpdateForm,
     UserPasswordChangeForm,
+    UserEmailForm,
+)
+from .services import (
+    send_new_password,
+    send_register_email,
 )
 
 
@@ -29,6 +38,7 @@ def user_register(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data["password"])
             new_user.save()
+            send_register_email(new_user.email)
             return redirect("users:login")
     context = {
         "form": form,
@@ -141,7 +151,7 @@ def password_change(request):
     }
     return render(
         request,
-        "users/user_includes/password_change.html",
+        "users/user_includes/password-change.html",
         context,
     )
 
@@ -153,3 +163,36 @@ def user_logout(request):
     """
     logout(request)
     return redirect("dogs:index")
+
+
+def reset_password_success(request):
+    return render(
+        request,
+        "users/reset-password-success.html",
+    )
+
+
+def reset_password(request):
+    form = UserEmailForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            user = User.objects.get(email=email)
+            new_password = "".join(
+                random.sample((string.ascii_letters + string.digits), 12)
+            )
+            user.set_password(new_password)
+            user.save()
+            send_new_password(user.email, new_password)
+            if "HX-Request" in request.headers:
+                response = HttpResponse()
+                response["HX-Redirect"] = "/users/reset-password-success"
+                return response
+    context = {
+        "form": form,
+    }
+    return render(
+        request,
+        "users/reset-password.html",
+        context,
+    )

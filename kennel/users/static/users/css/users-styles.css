@@ -75,7 +75,6 @@
     margin: 0;
 }
 
-/*ссылка на изменения*/
 .user-profile__group-links {
     display: flex;
     flex-direction: column;
@@ -99,4 +98,85 @@
     position: relative;
     letter-spacing: 1.2px;
 
+}
+
+/* ссылка на сброс пароля на входе */
+.login-form__reset-password-block {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-form__reset-password-text {
+    color: #7e7979;
+    font-weight: 700;
+    position: relative;
+    letter-spacing: 1.2px;
+}
+
+.login-form__reset-password-text:hover {
+    color: #151515;
+    transition: all 0.5s;
+}
+
+.login-form__reset-password-text:after {
+    content: '';
+    position: absolute;
+    height: 2px;
+    background-color: #165cc6;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    transition: all 0.3s;
+}
+
+.login-form__reset-password-text:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+/* шаблон успешного изменения пароля */
+.password-reset-success-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    background-color: #f4f7fa;
+}
+
+.password-reset-success-box {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 32px 40px;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    max-width: 420px;
+    width: 100%;
+}
+
+.password-reset-success-title {
+    font-size: 26px;
+    color: #2e7d32;
+    margin-bottom: 20px;
+}
+
+.password-reset-success-text {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 16px;
+}
+
+.password-reset-success-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #2e7d32;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.password-reset-success-button:hover {
+    background-color: #27672c;
 }

@@ -20,6 +20,22 @@ class UserForm(forms.ModelForm):
         exclude = ("is_active", "status")
 
 
+class UserEmailForm(forms.Form):
+    """Форма для пользователя."""
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={"placeholder": "Введите вашу почту", "class": "form-control"}
+        ),
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Пользователь с таким почтой не найден.")
+        return email
+
+
 class UserRegisterForm(forms.ModelForm):
     """Форма регистрации пользователя."""
 
@@ -98,7 +114,7 @@ class UserUpdateForm(forms.ModelForm):
         )
         widgets = {
             "birth_date": forms.DateInput(
-                attrs={"placeholder": "ДД.ММ.ГГГГ", "class": "form-control"}
+                attrs={"placeholder": "дд.мм.гггг", "class": "form-control"}
             ),
         }
 

@@ -18,7 +18,7 @@ class PasswordValidator:
 
 
 class PhoneNumberValidator:
-    """Валидация номера телефона для стран СНГ."""
+    """Валидация номера телефона."""
 
     @staticmethod
     def validate_phone(phone):
@@ -36,7 +36,7 @@ class PhoneNumberValidator:
 
 
 class TelegramUsernameValidator:
-    """Валидация имени пользователя для Telegram."""
+    """Валидация имени пользователя Telegram."""
 
     @staticmethod
     def validate_telegram(telegram):

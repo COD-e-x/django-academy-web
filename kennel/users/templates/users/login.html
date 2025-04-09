@@ -1,38 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
-  <form class="form"
-        method="post"
+  <div id="login-form__resset-password"
+       class="form-container"
   >
-    <div class=" form__title">
-      Войдите в свою учетную запись
-    </div>
-    {% csrf_token %}
-    <div class="form__group">
-      {% for field in form %}
-        <div class="form__group-item">
-          <label class="form__group-label">
-            {{ field.label }}:{% if field.field.required %} *{% endif %}
-          </label>
-          <div class="form__group-field">
-            {{ field }}
+    <form class="form"
+          method="post"
+    >
+      <div class=" form__title">
+        Войдите в свою учетную запись
+      </div>
+      {% csrf_token %}
+      <div class="form__group">
+        {% for field in form %}
+          <div class="form__group-item">
+            {% if field.name == "password" %}
+              <div class="login-form__reset-password-block">
+                <label class="form__group-label">
+                  {{ field.label }}:{% if field.field.required %} *{% endif %}
+                </label>
+                <a>
+                  <small class="login-form__reset-password-text"
+                         hx-get="{% url 'users:reset-password' %}"
+                         hx-target="#login-form__resset-password"
+                         hx-swap="innerHTML"
+                  >
+                    Забыли?
+                  </small>
+                </a>
+              </div>
+            {% else %}
+              <label class="form__group-label">
+                {{ field.label }}:{% if field.field.required %} *{% endif %}
+              </label>
+            {% endif %}
+            <div class="form__group-field">
+              {{ field }}
+            </div>
+            {% if field.errors %}
+              <div class="form__group-error">
+                {{ field.errors }}
+              </div>
+            {% endif %}
+            {% if field.name == "password" and  form.non_field_errors %}
+              <div class="form__group-error">
+                {% for error in form.non_field_errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
           </div>
-          {% if field.errors %}
-            <div class="form__group-error">
-              {{ field.errors }}
-            </div>
-          {% endif %}
-          {% if field.name == "password" and  form.non_field_errors %}
-            <div class="form__group-error">
-              {% for error in form.non_field_errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-        </div>
-      {% endfor %}
-      <button class="btn form__btn" type="submit">
-        Войти
-      </button>
-    </div>
-  </form>
+        {% endfor %}
+        {% if message %}
+          <div class="alert alert-info">
+            {{ message }}
+          </div>
+        {% endif %}
+        <button class="btn form__btn" type="submit">
+          Войти
+        </button>
+      </div>
+    </form>
+  </div>
 {% endblock %}
