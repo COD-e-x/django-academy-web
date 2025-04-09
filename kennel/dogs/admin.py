@@ -20,10 +20,12 @@ class DogAdmin(admin.ModelAdmin):
         "breed",
         "birth_date",
         "photo",
+        "owner",
     )
     list_filter = (
         "breed",
         "birth_date",
+        "owner",
     )
     ordering = ("name",)
     search_fields = ("name",)

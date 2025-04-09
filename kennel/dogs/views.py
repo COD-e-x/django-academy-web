@@ -68,7 +68,9 @@ def dog_create(request):
     form = DogForm(request.POST or None, request.FILES or None)
     if request.method == "POST":
         if form.is_valid():
-            form.save()
+            dog_object = form.save(commit=False)
+            dog_object.owner = request.user
+            dog_object.save()
             return redirect("dogs:dogs_list")
     context = {
         "form": form,

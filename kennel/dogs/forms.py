@@ -13,9 +13,10 @@ class DogForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             "birth_date": forms.DateInput(
-                attrs={"placeholder": "ДД.ММ.ГГГГ", "class": "form-control"}
+                attrs={"placeholder": "дд.мм.гггг", "class": "form-control"}
             ),
         }
+        exclude = ("owner",)
 
     def clean_name(self):
         """Валидация имени"""
