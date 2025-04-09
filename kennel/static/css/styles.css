@@ -125,6 +125,7 @@ input::-ms-clear {
 
 .header__menu-link {
     color: #fff;
+    text-transform: uppercase;
     font-weight: 700;
     position: relative;
     letter-spacing: 1.2px;
@@ -170,6 +171,10 @@ input::-ms-clear {
 
 .header__icon--user-profile {
     color: #fff;
+    text-transform: lowercase;
+}
+
+.header__icon-email {
     text-transform: lowercase;
 }
 

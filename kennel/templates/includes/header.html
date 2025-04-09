@@ -24,7 +24,7 @@
           {% if user.is_authenticated %}
             <div class="header__user-info--auth">
               <a class="header__menu-link" href="{% url 'users:profile' %}">
-                <small class="header__icon-image">
+                <small class="header__icon-email">
                   {{ user.email }}
                 </small></a>
             </div>
