@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 NULLABLE = {"null": True, "blank": True}
 NULLABLE_FOR_STRING = {"null": False, "blank": True}
@@ -6,6 +7,7 @@ NULLABLE_FOR_STRING = {"null": False, "blank": True}
 
 class Breed(models.Model):
     """Модель для породы."""
+
     name = models.CharField(
         max_length=100,
         verbose_name="Порода",
@@ -31,8 +33,9 @@ class Breed(models.Model):
 
 class Dog(models.Model):
     """Модель для собаки."""
+
     name = models.CharField(
-        max_length=250,
+        max_length=30,
         verbose_name="Имя",
     )
     breed = models.ForeignKey(
@@ -48,6 +51,12 @@ class Dog(models.Model):
     birth_date = models.DateTimeField(
         **NULLABLE,
         verbose_name="Дата рождения",
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        **NULLABLE,
+        verbose_name="Хозяин",
     )
 
     class Meta:

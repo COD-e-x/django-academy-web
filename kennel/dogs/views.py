@@ -62,6 +62,7 @@ def dogs_list(request):
     )
 
 
+@login_required(login_url="users:login")
 def dog_create(request):
     """Обрабатывает создание новой собаки через форму."""
     form = DogForm(request.POST or None, request.FILES or None)
@@ -145,6 +146,7 @@ def dog_delete_abort(request, pk):
     )
 
 
+@login_required(login_url="users:login")
 def dog_delete(request, pk: int):
     """Удаляет собаку."""
     dog_object = get_object_or_404(Dog, pk=pk)
