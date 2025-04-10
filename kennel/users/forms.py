@@ -24,6 +24,7 @@ class UserEmailForm(forms.Form):
     """Форма для пользователя."""
 
     email = forms.EmailField(
+        label="Эл. почта",
         widget=forms.EmailInput(
             attrs={"placeholder": "Введите вашу почту", "class": "form-control"}
         ),
@@ -77,7 +78,9 @@ class UserRegisterForm(forms.ModelForm):
 class UserLoginForm(forms.Form):
     """Форма авторизации пользователя."""
 
-    email = forms.EmailField()
+    email = forms.EmailField(
+        label="Эл. почта",
+    )
     password = forms.CharField(
         label="Пароль",
         widget=forms.PasswordInput,
