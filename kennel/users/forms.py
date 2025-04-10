@@ -1,6 +1,5 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.contrib.auth import authenticate
 from django.utils import timezone
 from django.contrib.auth.forms import PasswordChangeForm
 
@@ -33,7 +32,7 @@ class UserEmailForm(forms.Form):
     def clean_email(self):
         email = self.cleaned_data["email"]
         if not User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Пользователь с таким почтой не найден.")
+            raise forms.ValidationError("Пользователь с такой почтой не найден.")
         return email
 
 
@@ -64,39 +63,49 @@ class UserRegisterForm(forms.ModelForm):
         """Проверка на совпадение паролей."""
         cd = self.cleaned_data
         if cd.get("password") != cd.get("password2"):
-            raise ValidationError("Пароли не совпадают!")
+            raise ValidationError("Пароли не совпадают.")
         return cd["password2"]
 
     def clean_email(self):
         """Валидация email."""
         email = self.cleaned_data.get("email").strip().lower()
         if User.objects.filter(email=email).exists():
-            raise ValidationError(f"{email} уже зарегистрирован!")
+            raise ValidationError(f"{email} уже зарегистрирован.")
         return email
 
 
-class UserLoginForm(forms.Form):
+class UserLoginForm(forms.ModelForm):
     """Форма авторизации пользователя."""
 
-    email = forms.EmailField(
-        label="Эл. почта",
-    )
     password = forms.CharField(
         label="Пароль",
         widget=forms.PasswordInput,
         min_length=8,
     )
 
+    class Meta:
+        model = User
+        fields = ("email",)
+
     def clean(self):
-        """Проверка на существование пользователя в базе данных."""
-        cleaned_data = super().clean()
-        email = cleaned_data.get("email")
-        password = cleaned_data.get("password")
+        """Проверка на существование пользователя и его активности."""
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
         if email and password:
-            user = authenticate(email=email, password=password)
-            if not user:
-                raise ValidationError("Неверный email или пароль!")
-        return cleaned_data
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                self.add_error("email", ValidationError("Неверный email."))
+                return self.cleaned_data
+            if not user.check_password(password):
+                self.add_error("password", ValidationError("Неверный пароль."))
+                return self.cleaned_data
+            is_active = user.is_active
+            if not is_active:
+                raise ValidationError(
+                    "Доступ заблокирован, обратитесь к администрации."
+                )
+        return self.cleaned_data
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -149,7 +158,7 @@ class UserUpdateForm(forms.ModelForm):
         """Валидация даты рождения."""
         birth_date = self.cleaned_data.get("birth_date")
         if birth_date and birth_date > timezone.now().date():
-            raise ValidationError("Дата рождения не может быть в будущем!")
+            raise ValidationError("Дата рождения не может быть в будущем.")
         return birth_date
 
     def clean_email(self):
@@ -157,7 +166,7 @@ class UserUpdateForm(forms.ModelForm):
         email = self.cleaned_data.get("email").strip().lower()
         user_email = self.instance.email.strip().lower()
         if email != user_email and User.objects.filter(email=email).exists():
-            raise ValidationError(f"{email} уже зарегистрирован!")
+            raise ValidationError(f"{email} уже зарегистрирован.")
         return email
 
     def clean_profile_picture(self):
