@@ -10,8 +10,17 @@ from django.contrib.auth import (
     logout,
     update_session_auth_hash,
 )
-
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import (
+    LoginView,
+    PasswordChangeView,
+    LogoutView,
+)
+from django.views.generic import (
+    CreateView,
+    UpdateView,
+)
+from django.urls import reverse_lazy
 
 from .models import User
 from .forms import (
@@ -27,27 +36,20 @@ from .services import (
 )
 
 
-def user_register(request):
+class UserRegisterViews(CreateView):
     """
     Регистрация нового пользователя.
     Сохраняет пользователя, если форма валидна, и перенаправляет на страницу входа.
     """
-    form = UserRegisterForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            new_user = form.save(commit=False)
-            new_user.set_password(form.cleaned_data["password"])
-            new_user.save()
-            send_register_email(new_user.email)
-            return redirect("users:login")
-    context = {
-        "form": form,
-    }
-    return render(
-        request,
-        "users/register.html",
-        context,
-    )
+
+    model = User
+    form_class = UserRegisterForm
+    success_url = reverse_lazy("users:login")
+    template_name = "users/register.html"
+
+    def form_valid(self, form):
+        send_register_email(form.clean_email())
+        return super().form_valid(form)
 
 
 def user_login(request):

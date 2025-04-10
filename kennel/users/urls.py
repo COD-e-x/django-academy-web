@@ -9,7 +9,7 @@ app_name = UsersConfig.name
 
 urlpatterns = [
     path("", views.user_login, name="login"),
-    path("register/", views.user_register, name="register"),
+    path("register/", views.UserRegisterViews.as_view(), name="register"),
     path("profile/", views.user_profile, name="profile"),
     path("profile/update/", views.user_update, name="update"),
     path("profile/password-change/", views.password_change, name="password-change"),

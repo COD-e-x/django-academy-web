@@ -1,7 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import (
+    PasswordChangeForm,
+    UserCreationForm,
+)
 
 from .models import User
 from .validators import (
@@ -36,41 +39,25 @@ class UserEmailForm(forms.Form):
         return email
 
 
-class UserRegisterForm(forms.ModelForm):
+class UserRegisterForm(UserCreationForm):
     """Форма регистрации пользователя."""
-
-    password = forms.CharField(
-        label="Пароль",
-        widget=forms.PasswordInput,
-        min_length=8,
-    )
-    password2 = forms.CharField(
-        label="Повторите пароль",
-        widget=forms.PasswordInput,
-        min_length=8,
-    )
 
     class Meta:
         model = User
         fields = ("email",)
 
-    def clean_password(self):
-        """Валидация пароля."""
-        password = self.cleaned_data.get("password")
-        return PasswordValidator.validate_password(password)
-
     def clean_password2(self):
         """Проверка на совпадение паролей."""
-        cd = self.cleaned_data
-        if cd.get("password") != cd.get("password2"):
+        cleaned_date = self.cleaned_data
+        if cleaned_date.get("password1") != cleaned_date.get("password2"):
             raise ValidationError("Пароли не совпадают.")
-        return cd["password2"]
+        return cleaned_date["password2"]
 
     def clean_email(self):
         """Валидация email."""
         email = self.cleaned_data.get("email").strip().lower()
         if User.objects.filter(email=email).exists():
-            raise ValidationError(f"{email} уже зарегистрирован.")
+            raise ValidationError(f'Увы, адрес "{email}" уже занят. Попробуйте другой.')
         return email
 
 
