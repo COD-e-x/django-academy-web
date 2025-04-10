@@ -176,7 +176,7 @@ input::-ms-clear {
 }
 
 .header__icon-email {
-    text-transform: lowercase;
+    text-transform: lowercase !important;
 }
 
 .header__icon-image:hover {

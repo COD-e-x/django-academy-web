@@ -12,7 +12,7 @@ def send_register_email(email):
             </p>
             <p style="font-family: Arial, sans-serif; font-size: 16px; color: #333333; text-align: center">
                 Для начала работы, пожалуйста, перейдите по
-                <a href="https://cod-ex.ru/start" style="color: #1e90ff; text-decoration: none">ссылке</a>.
+                <a href="https://cod-ex.ru" style="color: #1e90ff; text-decoration: none">ссылке</a>.
             </p>
             <p style="font-family: Arial, sans-serif; font-size: 16px; color: #333333; text-align: center">
                 С уважением, команда Cod-Ex.
@@ -38,7 +38,8 @@ def send_new_password(email, new_password):
         <body>
             <h1 style="font-family: Arial, sans-serif; color: #165cc6; text-align: center">Ваш новый пароль</h1>
             <p style="font-family: Arial, sans-serif; font-size: 16px; color: #333333; text-align: center">
-                Ваш новый пароль для доступа к платформе <strong style="color: #165cc6">сod-ex.ru</strong>:
+                Ваш новый пароль для доступа к платформе 
+                <a href="https://cod-ex.ru" style="color: #1e90ff; text-decoration: none">www.cod-ex.ru</a>.
             </p>
             <p style="font-family: Arial, sans-serif; font-size: 16px; color: #333333; text-align: center">
                 <strong style="font-size: 18px; color: #1e90ff">{new_password}</strong>
