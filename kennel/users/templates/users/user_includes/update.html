@@ -32,7 +32,10 @@
             {% if user.profile_picture %}
               <p>На данный момент: {{ user.profile_picture.name|shorten_filename:12 }}</p>
             {% endif %}
-            <input type="file" name="profile_picture" id="photo">
+            <input type="file" name="profile_picture" id="photo" onchange="previewImage(event)">
+            <div id="image-preview-container">
+              <img id="image-preview" src="" alt="">
+            </div>
           {% else %}
             {{ field }}
           {% endif %}

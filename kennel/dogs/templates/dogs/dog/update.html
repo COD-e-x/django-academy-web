@@ -4,20 +4,17 @@
 {% block content %}
   <form class="form"
         method="post"
-        enctype="multipart/form-data">
+        enctype="multipart/form-data"
+  >
     <div class="form__title">
-      {% if dog %}
-        Редактирование собаки: {{ dog.name }}
-      {% else %}
-        Добавление новой собаки
-      {% endif %}
+      Редактирование собаки: {{ dog.name }}
     </div>
     {% csrf_token %}
     <div class="form__group">
       {% for field in form %}
         <div class="form__group-item">
           {% if field.name == "photo" %}
-            <label class="form__group-label" for="{{ field.id_for_label }}">
+            <label class="form__group-label">
               {{ field.label }}:{% if field.field.required %} *{% endif %}
             </label>
             <small id="form-dog__requirements"
@@ -25,7 +22,7 @@
               <br>* размер фото не более: 5MB, разрешённые форматы: .jpg, .jpeg, .png.
             </small>
           {% else %}
-            <label class="form__group-label" for="{{ field.id_for_label }}">
+            <label class="form__group-label">
               {{ field.label }}:{% if field.field.required %} *{% endif %}
             </label>
           {% endif %}
@@ -34,7 +31,10 @@
               {% if dog.photo %}
                 <p>На данный момент: {{ dog.photo.name|shorten_filename:12 }}</p>
               {% endif %}
-              <input type="file" name="photo" id="photo">
+              <input type="file" name="photo" id="photo" onchange="previewImage(event)">
+              <div id="image-preview-container">
+                <img id="image-preview" src="" alt="">
+              </div>
             {% else %}
               {{ field }}
             {% endif %}
@@ -46,13 +46,18 @@
           {% endif %}
         </div>
       {% endfor %}
-      <button class="btn form__btn" type="submit">
-        {% if dog %}
+      <div class="form__group-btn">
+        <button class="btn form__btn"
+                type="submit"
+        >
           Сохранить
-        {% else %}
-          Добавить
-        {% endif %}
-      </button>
+        </button>
+        <a class="btn form__btn"
+           href="{% url "dogs:dog_detail" dog.pk %}"
+        >
+          Отмена
+        </a>
+      </div>
     </div>
   </form>
 {% endblock %}

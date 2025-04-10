@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load dog_tags %}
 
 {% block content %}
   <form class="form"
@@ -6,19 +7,15 @@
         enctype="multipart/form-data"
   >
     <div class="form__title">
-      {% if dog %}
-        Редактирование собаки: {{ dog.name }}
-      {% else %}
-        Добавление новой собаки
-      {% endif %}
+      Добавление новой собаки
     </div>
     {% csrf_token %}
     <div class="form__group">
       {% for field in form %}
         <div class="form__group-item">
           {% if field.name == "photo" %}
-            <label class="form__group-labels">
-              {{ field.label }}:
+            <label class="form__group-label">
+              {{ field.label }}:{% if field.field.required %} *{% endif %}
             </label>
             <small id="form-dog__requirements"
                    class="form__group-labels-requirements">
@@ -30,7 +27,17 @@
             </label>
           {% endif %}
           <div class="form__group-field">
-            {{ field }}
+            {% if field.name == "photo" %}
+              {% if dog.photo %}
+                <p>На данный момент: {{ dog.photo.name|shorten_filename:12 }}</p>
+              {% endif %}
+              <input type="file" name="photo" id="photo" onchange="previewImage(event)">
+              <div id="image-preview-container">
+                <img id="image-preview" src="" alt="">
+              </div>
+            {% else %}
+              {{ field }}
+            {% endif %}
           </div>
           {% if field.errors %}
             <div class="form__group-error">
@@ -40,15 +47,8 @@
         </div>
       {% endfor %}
       <button class="btn form__btn" type="submit">
-        {% if dog %}
-          Сохранить
-        {% else %}
-          Добавить
-        {% endif %}
+        Добавить
       </button>
     </div>
   </form>
 {% endblock %}
-
-
-

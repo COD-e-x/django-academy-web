@@ -337,3 +337,14 @@ input::-ms-clear {
     box-shadow: 0 0 2px rgba(0, 0, 0, 1);
     transition: background-color 0.3s;
 }
+
+#image-preview-container {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
+
+#image-preview {
+    width: 200px;
+    border-radius: 10px;
+}
