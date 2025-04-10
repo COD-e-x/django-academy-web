@@ -48,7 +48,7 @@ class Dog(models.Model):
         **NULLABLE,
         verbose_name="Фото",
     )
-    birth_date = models.DateTimeField(
+    birth_date = models.DateField(
         **NULLABLE,
         verbose_name="Дата рождения",
     )

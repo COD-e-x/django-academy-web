@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from .models import Dog
@@ -31,9 +32,11 @@ class DogForm(forms.ModelForm):
         """Валидация даты рождения"""
         birth_date = self.cleaned_data.get("birth_date")
         if birth_date:
-            birth_date_date = birth_date.date()
-            if birth_date_date > timezone.now().date():
-                raise ValidationError("Дата рождения не может быть в будущем!")
+            max_age_date = timezone.now().date() - relativedelta(years=35)
+            if birth_date < max_age_date:
+                raise ValidationError("Возраст собаки не может превышать 35 лет.")
+            if birth_date > timezone.now().date():
+                raise ValidationError("Дата рождения не может быть в будущем.")
         return birth_date
 
     def clean_photo(self):
