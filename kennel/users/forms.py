@@ -49,10 +49,12 @@ class UserRegisterForm(UserCreationForm):
 
     def clean_password2(self):
         """Проверка на совпадение паролей."""
-        cleaned_date = self.cleaned_data
-        if cleaned_date.get("password1") != cleaned_date.get("password2"):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        PasswordValidator.validate_password(password1)
+        if password1 and password2 and password1 != password2:
             raise ValidationError("Пароли не совпадают.")
-        return cleaned_date["password2"]
+        return password2
 
     def clean_email(self):
         """Валидация email."""
@@ -79,9 +81,14 @@ class UserLoginForm(forms.Form):
         kwargs.pop("request", None)
         super().__init__(*args, **kwargs)
 
+    def clean_password(self):
+        """Валидация пароля."""
+        password = self.cleaned_data.get("password")
+        return PasswordValidator.validate_password(password)
+
     def clean(self):
         """
-        Проверка существует ли пользователь в базу.
+        Проверка существует ли пользователь в базе.
         Проверка блокировки доступа к аккаунту.
         """
         email = self.cleaned_data.get("email")
