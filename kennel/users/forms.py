@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.contrib.auth.forms import (
     PasswordChangeForm,
     UserCreationForm,
-    AuthenticationForm,
 )
 
 from .models import User
@@ -97,7 +96,7 @@ class UserLoginForm(forms.Form):
                 return self.cleaned_data
             if not user.is_active:
                 raise ValidationError(
-                    "Доступ заблокирован, обратитесь к администрации."
+                    "Доступ заблокирован, обратитесь к администрации сайта."
                 )
             self.user_cache = user
         return self.cleaned_data

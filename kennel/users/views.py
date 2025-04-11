@@ -16,6 +16,7 @@ from django.contrib.auth.views import (
 )
 from django.views.generic import (
     CreateView,
+    DetailView,
     UpdateView,
 )
 from django.urls import reverse_lazy
@@ -45,7 +46,7 @@ class UserRegisterViews(CreateView):
     template_name = "users/register.html"
     success_url = reverse_lazy("users:login")
     extra_context = {
-        "title": "Регистрация пользователя.",
+        "title": "Регистрация пользователя",
     }
 
     def form_valid(self, form):
@@ -56,27 +57,21 @@ class UserRegisterViews(CreateView):
 class UserLoginView(LoginView):
     form_class = UserLoginForm
     template_name = "users/login.html"
-    success_url = reverse_lazy("users:profile")
     redirect_authenticated_user = True  # Перенаправляет авторизованного пользователя. Что бы не регистрировался заново.
     extra_context = {
-        "title": "Авторизация пользователя.",
+        "title": "Авторизация пользователя",
     }
 
 
-@login_required(login_url="users:login")
-def user_profile(request):
-    """
-    Профиль пользователя.
-    Отображает страницу профиля для авторизованных пользователей.
-    """
-    context = {
-        "title": f"Ваш профиль",
+class UserProfileView(DetailView):
+    model = User
+    template_name = "users/profile.html"
+    extra_context = {
+        "title": "Ваш профиль",
     }
-    return render(
-        request,
-        "users/profile.html",
-        context,
-    )
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 @login_required(login_url="users:login")
