@@ -12,7 +12,7 @@ class PasswordValidator:
             raise ValidationError("Пароль должен быть не менее 8 символов!")
         if not re.fullmatch(r"[A-Za-z0-9@#$%^&+=!*()-]+", password):
             raise ValidationError(
-                "Допустимы только английские буквы, цифры или @#$%^&+=!*()-!"
+                "Допустимы только английские буквы, цифры и @#$%^&+=!*()-!"
             )
         return password
 

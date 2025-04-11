@@ -7,7 +7,6 @@ from django.contrib.auth import (
     logout,
     update_session_auth_hash,
 )
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import (
     LoginView,
     PasswordChangeView,
@@ -54,6 +53,11 @@ class UserRegisterViews(CreateView):
 
 
 class UserLoginView(LoginView):
+    """
+    Вход пользователя.
+    Аутентифицирует пользователя и перенаправляет в профиль при успешном входе.
+    """
+
     form_class = UserLoginForm
     template_name = "users/login.html"
     redirect_authenticated_user = True  # Перенаправляет авторизованного пользователя. Что бы не регистрировался заново.
@@ -63,6 +67,11 @@ class UserLoginView(LoginView):
 
 
 class UserProfileView(DetailView):
+    """
+    Профиль пользователя.
+    Отображает страницу профиля для авторизованных пользователей.
+    """
+
     model = User
     template_name = "users/profile.html"
     extra_context = {
@@ -74,12 +83,18 @@ class UserProfileView(DetailView):
 
 
 class UserUpdateView(UpdateView):
+    """
+    Обновление данных пользователя.
+    Позволяет обновить профиль, включая фото.
+    Удаляет старую фотографию при загрузке новой.
+    """
+
     model = User
     form_class = UserUpdateForm
     template_name = "users/user_includes/update.html"
     success_url = reverse_lazy("users:profile")
     extra_context = {
-        "title": "Изменение профиля.",
+        "title": "Изменение профиля",
     }
 
     def get_object(self, queryset=None):
@@ -94,30 +109,26 @@ class UserUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-@login_required(login_url="users:login")
-def password_change(request):
+class UserPasswordChangeView(PasswordChangeView):
     """
     Смена пароля пользователя.
     Обновляет пароль и сессию при успешной валидации формы.
     """
-    user_object = request.user
-    form = UserPasswordChangeForm(user_object or None, request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            user_object = form.save()
-            update_session_auth_hash(request, user_object)
-            if "HX-Request" in request.headers:
-                response = HttpResponse()
-                response["HX-Redirect"] = "/users/profile/"
-                return response
-    context = {
-        "form": form,
+
+    form_class = UserPasswordChangeForm
+    template_name = "users/user_includes/password-change.html"
+    success_url = reverse_lazy("users:login")
+    extra_context = {
+        "title": "Смена пароля",
     }
-    return render(
-        request,
-        "users/user_includes/password-change.html",
-        context,
-    )
+
+    def form_valid(self, form):
+        form.save()
+        if "HX-Request" in self.request.headers:
+            response = HttpResponse()
+            response["HX-Redirect"] = self.get_success_url()
+            return response
+        return super().form_valid(form)
 
 
 def user_logout(request):
