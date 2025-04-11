@@ -3,10 +3,8 @@ import random
 import string
 
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, reverse, redirect
 from django.contrib.auth import (
-    authenticate,
-    login,
     logout,
     update_session_auth_hash,
 )
@@ -39,43 +37,30 @@ from .services import (
 class UserRegisterViews(CreateView):
     """
     Регистрация нового пользователя.
-    Сохраняет пользователя, если форма валидна, и перенаправляет на страницу входа.
+    Сохраняет пользователя, если форма валидна, и перенаправляет на страницу профиля.
     """
 
     model = User
     form_class = UserRegisterForm
-    success_url = reverse_lazy("users:login")
     template_name = "users/register.html"
+    success_url = reverse_lazy("users:login")
+    extra_context = {
+        "title": "Регистрация пользователя.",
+    }
 
     def form_valid(self, form):
         send_register_email(form.clean_email())
         return super().form_valid(form)
 
 
-def user_login(request):
-    """
-    Вход пользователя.
-    Аутентифицирует пользователя и перенаправляет в профиль при успешном входе.
-    """
-    form = UserLoginForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            user = authenticate(
-                request,
-                email=form.cleaned_data["email"],
-                password=form.cleaned_data["password"],
-            )
-            if user:
-                login(request, user)
-                return redirect("users:profile")
-    context = {
-        "form": form,
+class UserLoginView(LoginView):
+    form_class = UserLoginForm
+    template_name = "users/login.html"
+    success_url = reverse_lazy("users:profile")
+    redirect_authenticated_user = True  # Перенаправляет авторизованного пользователя. Что бы не регистрировался заново.
+    extra_context = {
+        "title": "Авторизация пользователя.",
     }
-    return render(
-        request,
-        "users/login.html",
-        context,
-    )
 
 
 @login_required(login_url="users:login")

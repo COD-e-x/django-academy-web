@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.forms import (
     PasswordChangeForm,
     UserCreationForm,
+    AuthenticationForm,
 )
 
 from .models import User
@@ -61,21 +62,28 @@ class UserRegisterForm(UserCreationForm):
         return email
 
 
-class UserLoginForm(forms.ModelForm):
-    """Форма авторизации пользователя."""
+class UserLoginForm(forms.Form):
+    """Форма авторизации пользователя с email"""
 
+    email = forms.EmailField(
+        label="Эл. почта",
+        # validators=[validate_custom_email],
+    )
     password = forms.CharField(
         label="Пароль",
         widget=forms.PasswordInput,
         min_length=8,
     )
 
-    class Meta:
-        model = User
-        fields = ("email",)
+    def __init__(self, *args, **kwargs):
+        kwargs.pop("request", None)
+        super().__init__(*args, **kwargs)
 
     def clean(self):
-        """Проверка на существование пользователя и его активности."""
+        """
+        Проверка существует ли пользователь в базу.
+        Проверка блокировки доступа к аккаунту.
+        """
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
         if email and password:
@@ -87,12 +95,19 @@ class UserLoginForm(forms.ModelForm):
             if not user.check_password(password):
                 self.add_error("password", ValidationError("Неверный пароль."))
                 return self.cleaned_data
-            is_active = user.is_active
-            if not is_active:
+            if not user.is_active:
                 raise ValidationError(
                     "Доступ заблокирован, обратитесь к администрации."
                 )
+            self.user_cache = user
         return self.cleaned_data
+
+    def get_user(self):
+        """Возвращает аутентифицированного пользователя из кеша формы.
+        Returns:
+            User: Объект пользователя, сохранённый после успешной валидации в clean().
+        """
+        return self.user_cache
 
 
 class UserUpdateForm(forms.ModelForm):
