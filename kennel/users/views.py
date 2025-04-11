@@ -1,9 +1,8 @@
-import os
 import random
 import string
 
 from django.http import HttpResponse
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import (
     logout,
     update_session_auth_hash,
@@ -74,42 +73,25 @@ class UserProfileView(DetailView):
         return self.request.user
 
 
-@login_required(login_url="users:login")
-def user_update(request):
-    """
-    Обновление данных пользователя.
-    Позволяет обновить профиль, включая фото.
-    Удаляет старую фотографию при загрузке новой.
-    """
-    user_object = request.user
-    if user_object.profile_picture:
-        file_path = user_object.profile_picture.path
-    else:
-        file_path = None
-    if request.method == "POST":
-        form = UserUpdateForm(request.POST, request.FILES, instance=user_object)
-        if form.is_valid():
-            if "profile_picture" in request.FILES:
-                if file_path:
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
-            user_object = form.save(commit=False)
-            user_object.save()
-            if "HX-Request" in request.headers:
-                response = HttpResponse()
-                response["HX-Redirect"] = "/users/profile/"
-                return response
-        else:
-            return render(request, "users/user_includes/update.html", {"form": form})
-    context = {
-        "object": user_object,
-        "form": UserUpdateForm(instance=user_object),
+class UserUpdateView(UpdateView):
+    model = User
+    form_class = UserUpdateForm
+    template_name = "users/user_includes/update.html"
+    success_url = reverse_lazy("users:profile")
+    extra_context = {
+        "title": "Изменение профиля.",
     }
-    return render(
-        request,
-        "users/user_includes/update.html",
-        context,
-    )
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        form.save()
+        if "HX-Request" in self.request.headers:
+            response = HttpResponse()
+            response["HX-Redirect"] = self.get_success_url()
+            return response
+        return super().form_valid(form)
 
 
 @login_required(login_url="users:login")

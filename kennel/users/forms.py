@@ -1,11 +1,12 @@
 from django import forms
+from dateutil.relativedelta import relativedelta
+from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth.forms import (
     PasswordChangeForm,
     UserCreationForm,
 )
-
 from .models import User
 from .validators import (
     PasswordValidator,
@@ -156,10 +157,14 @@ class UserUpdateForm(forms.ModelForm):
         return TelegramUsernameValidator.validate_telegram(telegram)
 
     def clean_birth_date(self):
-        """Валидация даты рождения."""
+        """Валидация даты рождения"""
         birth_date = self.cleaned_data.get("birth_date")
-        if birth_date and birth_date > timezone.now().date():
-            raise ValidationError("Дата рождения не может быть в будущем.")
+        if birth_date:
+            max_age_date = timezone.now().date() - relativedelta(years=120)
+            if birth_date < max_age_date:
+                raise ValidationError("Возраст не может превышать 120 лет.")
+            if birth_date > timezone.now().date():
+                raise ValidationError("Дата рождения не может быть в будущем.")
         return birth_date
 
     def clean_email(self):
@@ -172,17 +177,22 @@ class UserUpdateForm(forms.ModelForm):
 
     def clean_profile_picture(self):
         """Валидация фото профиля."""
-        photo = self.cleaned_data.get("profile_picture")
-        if photo and photo.size > 5 * 1024 * 1024:
+        new_photo = self.cleaned_data.get("profile_picture")
+        if self.instance and new_photo:
+            old_photo = self.instance.profile_picture
+            if old_photo and old_photo.name != new_photo.name:
+                if default_storage.exists(old_photo.name):
+                    default_storage.delete(old_photo.name)
+        if new_photo and new_photo.size > 5 * 1024 * 1024:
             raise ValidationError("Размер фото не должен превышать 5MB.")
         valid_image_extensions = [".jpg", ".jpeg", ".png"]
-        if photo and not any(
-            photo.name.lower().endswith(ext) for ext in valid_image_extensions
+        if new_photo and not any(
+            new_photo.name.lower().endswith(ext) for ext in valid_image_extensions
         ):
             raise ValidationError(
                 "Файл должен быть изображением в формате .jpg, .jpeg, .png."
             )
-        return photo
+        return new_photo
 
 
 class UserPasswordChangeForm(PasswordChangeForm):
