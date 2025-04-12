@@ -19,3 +19,5 @@
 
 - Homework completed for module 16/7
   - Заменил в модели (users) все функциональные представления (FBV) на классы (CBV).
+
+- Homework completed for module 16/8
