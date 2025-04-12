@@ -82,7 +82,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "config/core/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -147,11 +147,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "config/core/static"]
 STATIC_ROOT = os.path.join(BASE_DIR.parent, "static")
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "config/core/media")
 
 
 # Default primary key field type
@@ -159,6 +159,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
+
+# Auth redirects
 LOGIN_REDIRECT_URL = "users:profile"
 LOGOUT_REDIRECT_URL = "dogs:index"
 LOGIN_URL = "/users/"
