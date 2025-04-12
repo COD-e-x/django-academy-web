@@ -18,7 +18,7 @@ services:
       - db
     volumes:
       - ./static:/app/static
-      - ./kennel/media:/app/kennel/media
+      - ./kennel/config/core/media:/app/media
     env_file:
       - ./.env
 
@@ -30,7 +30,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./static:/static:ro
-      - ./kennel/media:/media:ro
+      - ./kennel/config/core/media:/media:ro
     depends_on:
       - web
 
