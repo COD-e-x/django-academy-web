@@ -1,4 +1,6 @@
 import re
+from typing import Optional
+
 from django.core.exceptions import ValidationError
 
 
@@ -6,7 +8,7 @@ class PasswordValidator:
     """Валидация пароля."""
 
     @staticmethod
-    def validate_password(password):
+    def validate_password(password: str) -> str:
         """Проверяет пароль на соответствие требованиям."""
         if len(password) < 8:
             raise ValidationError("Пароль должен быть не менее 8 символов!")
@@ -21,7 +23,7 @@ class PhoneNumberValidator:
     """Валидация номера телефона."""
 
     @staticmethod
-    def validate_phone(phone):
+    def validate_phone(phone: Optional[str]) -> str:
         """Проверяет номер телефона на соответствие формату стран СНГ."""
         if not phone:
             return ""
@@ -39,7 +41,7 @@ class TelegramUsernameValidator:
     """Валидация имени пользователя Telegram."""
 
     @staticmethod
-    def validate_telegram(telegram):
+    def validate_telegram(telegram: Optional[str]) -> str:
         """Проверяет имя пользователя на соответствие формату Telegram."""
         if not telegram:
             return ""

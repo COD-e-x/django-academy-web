@@ -145,6 +145,11 @@ def reset_password_success(request):
 
 
 class UserResetPasswordView(FormView):
+    """
+    Восстановление пароля.
+    Перенаправление на страницу с подтверждением.
+    """
+
     form_class = UserEmailExistsForm
     template_name = "users/reset-password.html"
     success_url = reverse_lazy("users:reset-password-success")

@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .apps import DogsConfig
 from . import views
 
