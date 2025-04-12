@@ -35,7 +35,7 @@ urlpatterns = [
     ),
     path(
         "reset-password/",
-        views.reset_password,
+        views.UserResetPasswordView.as_view(),
         name="reset-password",
     ),
     path(

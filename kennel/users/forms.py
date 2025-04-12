@@ -24,23 +24,6 @@ class UserForm(forms.ModelForm):
         exclude = ("is_active", "status")
 
 
-class UserEmailForm(forms.Form):
-    """Форма для пользователя."""
-
-    email = forms.EmailField(
-        label="Эл. почта",
-        widget=forms.EmailInput(
-            attrs={"placeholder": "Введите вашу почту", "class": "form-control"}
-        ),
-    )
-
-    def clean_email(self):
-        email = self.cleaned_data["email"]
-        if not User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Пользователь с такой почтой не найден.")
-        return email
-
-
 class UserRegisterForm(UserCreationForm):
     """Форма регистрации пользователя."""
 
@@ -224,3 +207,20 @@ class UserPasswordChangeForm(PasswordChangeForm):
         if commit:
             self.user.save()
         return self.user
+
+
+class UserEmailExistsForm(forms.Form):
+    """Форма для проверки наличия в базе почты."""
+
+    email = forms.EmailField(
+        label="Эл. почта",
+        widget=forms.EmailInput(
+            attrs={"placeholder": "Введите вашу почту", "class": "form-control"}
+        ),
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError(f"Пользователь {email} не найден.")
+        return email

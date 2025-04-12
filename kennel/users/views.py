@@ -9,6 +9,7 @@ from django.contrib.auth.views import (
     LogoutView,
 )
 from django.views.generic import (
+    FormView,
     CreateView,
     DetailView,
     UpdateView,
@@ -21,7 +22,7 @@ from .forms import (
     UserLoginForm,
     UserUpdateForm,
     UserPasswordChangeForm,
-    UserEmailForm,
+    UserEmailExistsForm,
 )
 from .services import (
     send_new_password,
@@ -143,27 +144,25 @@ def reset_password_success(request):
     )
 
 
-def reset_password(request):
-    form = UserEmailForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            email = form.cleaned_data["email"]
-            user = User.objects.get(email=email)
-            new_password = "".join(
-                random.sample((string.ascii_letters + string.digits), 12)
-            )
-            user.set_password(new_password)
-            user.save()
-            send_new_password(user.email, new_password)
-            if "HX-Request" in request.headers:
-                response = HttpResponse()
-                response["HX-Redirect"] = "/users/reset-password-success"
-                return response
-    context = {
-        "form": form,
+class UserResetPasswordView(FormView):
+    form_class = UserEmailExistsForm
+    template_name = "users/reset-password.html"
+    success_url = reverse_lazy("users:reset-password-success")
+    extra_context = {
+        "title": "Восстановление пароля",
     }
-    return render(
-        request,
-        "users/reset-password.html",
-        context,
-    )
+
+    def form_valid(self, form):
+        email = form.cleaned_data["email"]
+        user = User.objects.get(email=email)
+        new_password = "".join(
+            random.sample((string.ascii_letters + string.digits), 12)
+        )
+        user.set_password(new_password)
+        user.save()
+        send_new_password(user.email, new_password)
+        if "HX-Request" in self.request.headers:
+            response = HttpResponse()
+            response["HX-Redirect"] = self.get_success_url()
+            return response
+        return super().form_valid(form)
