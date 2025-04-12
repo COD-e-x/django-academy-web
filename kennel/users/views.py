@@ -2,11 +2,7 @@ import random
 import string
 
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth import (
-    logout,
-    update_session_auth_hash,
-)
+from django.shortcuts import render
 from django.contrib.auth.views import (
     LoginView,
     PasswordChangeView,
@@ -131,13 +127,13 @@ class UserPasswordChangeView(PasswordChangeView):
         return super().form_valid(form)
 
 
-def user_logout(request):
+class UserLogoutView(LogoutView):
     """
     Выход пользователя.
     Завершающий сеанс и перенаправление на главную страницу.
     """
-    logout(request)
-    return redirect("dogs:index")
+
+    pass
 
 
 def reset_password_success(request):

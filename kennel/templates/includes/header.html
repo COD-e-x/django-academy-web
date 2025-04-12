@@ -37,9 +37,13 @@
                 </a>
               </li>
               <li class="header__menu-item">
-                <a class="header__icon--logout header__icon" href="{% url 'users:logout' %}">
-                  <img class="header__icon-image" src="{% static 'images/icons/logout.svg' %}" alt="logout">
-                </a>
+                <form method="post" action="{% url "users:logout" %}">
+                  {% csrf_token %}
+                  <button type="submit" class="header__icon header__icon--logout"
+                          style="background: none; border: none; padding: 0;">
+                    <img class="header__icon-image" src="{% static 'images/icons/logout.svg' %}" alt="logout">
+                  </button>
+                </form>
               </li>
             {% else %}
               <li class="header__menu-item">
