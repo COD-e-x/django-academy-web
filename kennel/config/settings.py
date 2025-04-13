@@ -219,6 +219,7 @@ LOGGING = {
             "delay": True,
         },
         "security_file": {
+            "level": "WARNING",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": BASE_DIR / "logs/security.log",
             "formatter": "verbose",
@@ -228,6 +229,7 @@ LOGGING = {
             "delay": True,
         },
         "auth_file": {
+            "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": BASE_DIR / "logs/auth.log",
             "formatter": "verbose",
