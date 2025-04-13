@@ -10,6 +10,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
 
   web:
     build: .
@@ -18,9 +20,11 @@ services:
       - db
     volumes:
       - ./static:/app/static
-      - ./kennel/config/core/media:/app/media
+      - ./kennel/config/core/media:/app/kennel/config/core/media
     env_file:
       - ./.env
+    networks:
+      - backend
 
   nginx:
     image: nginx:latest
@@ -33,6 +37,12 @@ services:
       - ./kennel/config/core/media:/media:ro
     depends_on:
       - web
+    networks:
+      - backend
 
 volumes:
   postgres_data:
+
+networks:
+  backend:
+    driver: bridge

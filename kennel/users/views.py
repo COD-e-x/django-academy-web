@@ -1,5 +1,6 @@
 import random
 import string
+import logging
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -28,6 +29,8 @@ from .services import (
     send_new_password,
     send_register_email,
 )
+
+logger_auth = logging.getLogger("users")
 
 
 class UserRegisterViews(CreateView):
@@ -61,6 +64,13 @@ class UserLoginView(LoginView):
     extra_context = {
         "title": "Авторизация пользователя",
     }
+
+    # noinspection PyTypeChecker
+    def form_valid(self, form):
+        logger_auth.info(
+            f"Пользователь {form.cleaned_data.get('email')} вошёл в систему."
+        )
+        return super().form_valid(form)
 
 
 class UserProfileView(DetailView):
@@ -99,6 +109,9 @@ class UserUpdateView(UpdateView):
 
     def form_valid(self, form):
         form.save()
+        logger_auth.info(
+            f"Пользователь {form.cleaned_data.get("email")} изменил свои данные."
+        )
         if "HX-Request" in self.request.headers:
             response = HttpResponse()
             response["HX-Redirect"] = self.get_success_url()
@@ -121,6 +134,7 @@ class UserPasswordChangeView(PasswordChangeView):
 
     def form_valid(self, form):
         form.save()
+        logger_auth.info(f"Пользователь {self.request.user.email} изменил пароль.")
         if "HX-Request" in self.request.headers:
             response = HttpResponse()
             response["HX-Redirect"] = self.get_success_url()
@@ -134,7 +148,11 @@ class UserLogoutView(LogoutView):
     Завершающий сеанс и перенаправление на главную страницу.
     """
 
-    pass
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        response = super().dispatch(request, *args, **kwargs)
+        logger_auth.info(f"Пользователь {user.email} вышел из системы.")
+        return response
 
 
 def reset_password_success(request):
@@ -166,6 +184,7 @@ class UserResetPasswordView(FormView):
         user.set_password(new_password)
         user.save()
         send_new_password(user.email, new_password)
+        logger_auth.info(f"Пользователь {email} восстановил пароль.")
         if "HX-Request" in self.request.headers:
             response = HttpResponse()
             response["HX-Redirect"] = self.get_success_url()

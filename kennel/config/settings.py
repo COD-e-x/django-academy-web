@@ -38,7 +38,8 @@ CSRF_TRUSTED_ORIGINS = os.getenv(
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 
 # # Указывает Django использовать HTTPS при генерации ссылок и перенаправлении
-# SECURE_SSL_REDIRECT = not DEBUG # Перенаправляет на HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = not DEBUG  # Перенаправляет на HTTPS
 #
 # # Указывает Django использовать заголовок HTTP Strict Transport Security (HSTS)
 # SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # Включает HSTS на 1 год
@@ -178,72 +179,97 @@ EMAIL_SERVER = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "formatters": {
-#         "verbose": {
-#             "format": "{asctime} - {levelname} - {name} - {message}",
-#             "style": "{",
-#         },
-#         "simple": {
-#             "format": "{levelname} - {name} - {message}",
-#             "style": "{",
-#         },
-#         "error": {
-#             "format": "{asctime} - {levelname} - {module} - {name} - {lineno:d} - {message}",
-#             "style": "{",
-#         },
-#     },
-#     "handlers": {
-#         # Обработчик для записи логов в файл
-#         "file": {
-#             "level": "INFO",
-#             "class": "logging.FileHandler",
-#             "filename": BASE_DIR / "logs/info-file.log",
-#             "formatter": "verbose",
-#             "encoding": "utf-8",
-#         },
-#         # Обработчик для вывода логов в консоль
-#         "console": {
-#             "level": "INFO",
-#             "class": "logging.StreamHandler",
-#             "formatter": "simple",
-#         },
-#         # Отдельный обработчик ERROR для записи подробных логов в файл
-#         "error_file": {
-#             "level": "ERROR",
-#             "class": "logging.FileHandler",
-#             "filename": BASE_DIR / "logs/error-file.log",
-#             "formatter": "error",
-#             "encoding": "utf-8",
-#         },
-#     },
-#     "loggers": {
-#         # logger для django
-#         "django": {
-#             "handlers": ["file", "console"],
-#             "level": "INFO",
-#             "propagate": False,
-#         },
-#         # logger для ошибок в django
-#         "django.request": {
-#             "handlers": ["error_file"],
-#             "level": "ERROR",
-#             "propagate": False,
-#         },
-#     },
-# }
+os.makedirs(BASE_DIR / "logs", exist_ok=True)
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} - {levelname} - {name} - {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} - {name} - {message}",
+            "style": "{",
+        },
+        "error": {
+            "format": "{asctime} - {levelname} - {module} - {name} - {lineno} - {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "WARNING",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs/warning-file.log",
+            "formatter": "verbose",
+            "maxBytes": 5 * 1024 * 1024,
+            "backupCount": 3,
+            "encoding": "utf-8",
+            "delay": True,
+        },
+        "error_file": {
+            "level": "ERROR",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs/error-file.log",
+            "formatter": "error",
+            "maxBytes": 5 * 1024 * 1024,
+            "backupCount": 3,
+            "encoding": "utf-8",
+            "delay": True,
+        },
+        "security_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs/security.log",
+            "formatter": "verbose",
+            "maxBytes": 5 * 1024 * 1024,
+            "backupCount": 3,
+            "encoding": "utf-8",
+            "delay": True,
+        },
+        "auth_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs/auth.log",
+            "formatter": "verbose",
+            "maxBytes": 5 * 1024 * 1024,
+            "backupCount": 3,
+            "encoding": "utf-8",
+            "delay": True,
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["error_file"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.security": {
+            "handlers": ["security_file"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}
 
-# apps = ["users", "dogs"]
-# for app in apps:
-#     LOGGING["loggers"][app] = {
-#         "handlers": ["file", "console"],
-#         "level": "INFO",
-#         "propagate": False,
-#     }
-#     LOGGING["loggers"][f"{app}.errors"] = {
-#         "handlers": ["error_file"],
-#         "level": "ERROR",
-#         "propagate": False,
-#     }
+apps = ["users", "dogs"]
+for app in apps:
+    LOGGING["loggers"][app] = {
+        "handlers": ["file"],
+        "level": "WARNING",
+        "propagate": False,
+    }
+    LOGGING["loggers"][app] = {
+        "handlers": ["auth_file"],
+        "level": "INFO",
+        "propagate": False,
+    }
+    LOGGING["loggers"][f"{app}.errors"] = {
+        "handlers": ["error_file"],
+        "level": "ERROR",
+        "propagate": False,
+    }
