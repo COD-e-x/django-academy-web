@@ -3,6 +3,12 @@ import os
 from django.http import HttpResponse
 from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DetailView,
+)
 
 from .models import Breed, Dog
 from .forms import DogForm
@@ -49,17 +55,12 @@ def dogs_by_breed(request, pk: int):
     )
 
 
-def dogs_list(request):
-    """Отображает список всех собак в питомнике."""
-    context = {
-        "dogs": Dog.objects.all(),
+class DogListView(ListView):
+    model = Dog
+    template_name = "dogs/dog/list.html"
+    extra_context = {
         "title": "Питомник - Все наши собаки",
     }
-    return render(
-        request,
-        "dogs/dog/list.html",
-        context,
-    )
 
 
 @login_required(login_url="users:login")
