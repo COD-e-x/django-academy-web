@@ -15,7 +15,7 @@
             <p id="dog-detail__group-text" class="dog-detail__group-text">
               <small>
                 <span style="color: #7e7979">Порода:</span> {{ dog.breed }}
-                <br><span style="color: #7e7979">Дата рождения:</span> {{ dog.birth_date|default:""|date:"d F Y" }}
+                <br><span style="color: #7e7979">Дата рождения:</span> {{ dog.birth_date|date:"d F Y"|default:"Не указано" }}
                 <br><span style="color: #7e7979">Хозяин:</span> {{ dog.owner|default:"Без хозяина" }}
                 <br><span style="color: #7e7979">Имя хозяина:</span> {{ dog.owner.first_name|default:"Не указано" }}
                 <br><span style="color: #7e7979">Телефон хозяина:</span> {{ dog.owner.phone|default:"Не указано" }}

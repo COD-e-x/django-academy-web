@@ -9,6 +9,7 @@ from django.views.generic import (
     UpdateView,
     DetailView,
 )
+from django.urls import reverse_lazy
 
 from .models import Breed, Dog
 from .forms import DogForm
@@ -63,24 +64,23 @@ class DogListView(ListView):
     }
 
 
-@login_required(login_url="users:login")
-def dog_create(request):
-    """Обрабатывает создание новой собаки через форму."""
-    form = DogForm(request.POST or None, request.FILES or None)
-    if request.method == "POST":
-        if form.is_valid():
-            dog_object = form.save(commit=False)
-            dog_object.owner = request.user
-            dog_object.save()
-            return redirect("dogs:dogs_list")
-    context = {
-        "form": form,
+class DogCreateView(CreateView):
+    model = Dog
+    form_class = DogForm
+    template_name = "dogs/dog/create.html"
+    success_url = reverse_lazy("dogs:dogs_list")
+    extra_context = {
+        "title": "Создание карточки собаки",
     }
-    return render(
-        request,
-        "dogs/dog/create.html",
-        context,
-    )
+
+    # def form_valid(self, form):
+    #     self.object = form.save()  # Сохраняет объект в БД
+    #     return HttpResponseRedirect(self.get_success_url())
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        print(form.instance.__dict__)
+        return super().form_valid(form)
 
 
 def dog_detail(request, pk: int):

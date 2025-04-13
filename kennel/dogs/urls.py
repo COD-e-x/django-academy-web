@@ -28,7 +28,7 @@ urlpatterns = [
     ),
     path(
         "dogs/create/",
-        views.dog_create,
+        views.DogCreateView.as_view(),
         name="dog_create",
     ),
     path(
