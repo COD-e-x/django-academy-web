@@ -38,7 +38,7 @@ urlpatterns = [
     ),
     path(
         "dogs/update/<int:pk>/",
-        views.dog_update,
+        views.DogUpdateView.as_view(),
         name="dog_update",
     ),
     path(

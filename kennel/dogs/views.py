@@ -94,33 +94,16 @@ class DogDetailView(DetailView):
         return context
 
 
-@login_required(login_url="users:login")
-def dog_update(request, pk: int):
-    """Обновляет данные у собаки."""
-    dog_object = get_object_or_404(Dog, pk=pk)
-    form = DogForm(request.POST or None, request.FILES or None, instance=dog_object)
-    if dog_object.photo:
-        file_path = dog_object.photo.path
-    else:
-        file_path = None
-    if request.method == "POST":
-        if form.is_valid():
-            if "photo" in request.FILES:
-                if file_path:
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
-            dog_object = form.save(commit=False)
-            dog_object.save()
-            return redirect(reverse("dogs:dog_detail", args=[pk]))
-    context = {
-        "dog": dog_object,
-        "form": form,
+class DogUpdateView(UpdateView):
+    model = Dog
+    form_class = DogForm
+    template_name = "dogs/dog/update.html"
+    extra_context = {
+        "title": "Обновить данные собаки",
     }
-    return render(
-        request,
-        "dogs/dog/update.html",
-        context,
-    )
+
+    def get_success_url(self):
+        return reverse("dogs:dog_detail", kwargs={"pk": self.get_object().pk})
 
 
 @login_required(login_url="users:login")
