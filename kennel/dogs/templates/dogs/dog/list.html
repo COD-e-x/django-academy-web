@@ -8,7 +8,7 @@
       <ul class="dog-list__list">
         {% for dog in object_list %}
           <li class="dog-list__item">
-            <img class="dog-list__img" src="{{ dog.photo|dogs_media }}" alt="dog photo">
+            <img class="dog-list__img" src="{{ dog.photo|dogs_media }}" loading="lazy" alt="dog photo">
             <p class="dog-list__text">{{ dog.name }}</p>
             <a class="btn dog-list__btn" href="{% url 'dogs:dog_detail' dog.pk %}" type="button">
               Подробнее
