@@ -38,7 +38,8 @@ CSRF_TRUSTED_ORIGINS = os.getenv(
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 
 # # Указывает Django использовать HTTPS при генерации ссылок и перенаправлении
-# SECURE_SSL_REDIRECT = not DEBUG # Перенаправляет на HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = not DEBUG  # Перенаправляет на HTTPS
 #
 # # Указывает Django использовать заголовок HTTP Strict Transport Security (HSTS)
 # SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # Включает HSTS на 1 год
