@@ -33,7 +33,7 @@ urlpatterns = [
     ),
     path(
         "dogs/detail/<int:pk>/",
-        views.dog_detail,
+        views.DogDetailView.as_view(),
         name="dog_detail",
     ),
     path(

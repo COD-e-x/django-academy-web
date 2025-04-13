@@ -83,20 +83,15 @@ class DogCreateView(CreateView):
         return super().form_valid(form)
 
 
-def dog_detail(request, pk: int):
-    """Отображает подробную информацию о собаке."""
-    dog_object = get_object_or_404(Dog, pk=pk)
-    breed_name = dog_object.breed.name
-    context = {
-        "dog": dog_object,
-        "title": f"Вы выбрали: {dog_object.name}.",
-        "breed_name": f"Порода {breed_name}",
-    }
-    return render(
-        request,
-        "dogs/dog/detail.html",
-        context,
-    )
+class DogDetailView(DetailView):
+    model = Dog
+    template_name = "dogs/dog/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        dog = self.object
+        context["title"] = f"Вы выбрали: {dog.name}."
+        return context
 
 
 @login_required(login_url="users:login")
