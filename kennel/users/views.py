@@ -9,6 +9,7 @@ from django.contrib.auth.views import (
     PasswordChangeView,
     LogoutView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
     FormView,
     CreateView,
@@ -17,6 +18,7 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy
 
+from config.core.mixins import HtmxRedirectMixin
 from .models import User
 from .forms import (
     UserRegisterForm,
@@ -73,7 +75,7 @@ class UserLoginView(LoginView):
         return super().form_valid(form)
 
 
-class UserProfileView(DetailView):
+class UserProfileView(LoginRequiredMixin, DetailView):
     """
     Профиль пользователя.
     Отображает страницу профиля для авторизованных пользователей.
@@ -89,7 +91,7 @@ class UserProfileView(DetailView):
         return self.request.user
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, HtmxRedirectMixin, UpdateView):
     """
     Обновление данных пользователя.
     Позволяет обновить профиль, включая фото.
@@ -112,14 +114,10 @@ class UserUpdateView(UpdateView):
         logger_auth.info(
             f"Пользователь {form.cleaned_data.get("email")} изменил свои данные."
         )
-        if "HX-Request" in self.request.headers:
-            response = HttpResponse()
-            response["HX-Redirect"] = self.get_success_url()
-            return response
         return super().form_valid(form)
 
 
-class UserPasswordChangeView(PasswordChangeView):
+class UserPasswordChangeView(LoginRequiredMixin, HtmxRedirectMixin, PasswordChangeView):
     """
     Смена пароля пользователя.
     Обновляет пароль и сессию при успешной валидации формы.
@@ -135,10 +133,6 @@ class UserPasswordChangeView(PasswordChangeView):
     def form_valid(self, form):
         form.save()
         logger_auth.info(f"Пользователь {self.request.user.email} изменил пароль.")
-        if "HX-Request" in self.request.headers:
-            response = HttpResponse()
-            response["HX-Redirect"] = self.get_success_url()
-            return response
         return super().form_valid(form)
 
 
