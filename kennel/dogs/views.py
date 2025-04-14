@@ -8,6 +8,7 @@ from django.views.generic import (
     DeleteView,
 )
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Breed, Dog
 from .forms import DogForm
@@ -62,7 +63,7 @@ class DogListView(ListView):
     }
 
 
-class DogCreateView(CreateView):
+class DogCreateView(LoginRequiredMixin, CreateView):
     model = Dog
     form_class = DogForm
     template_name = "dogs/dog/create.html"
@@ -91,7 +92,7 @@ class DogDetailView(DetailView):
         return context
 
 
-class DogUpdateView(UpdateView):
+class DogUpdateView(LoginRequiredMixin, UpdateView):
     model = Dog
     form_class = DogForm
     template_name = "dogs/dog/update.html"
@@ -103,7 +104,7 @@ class DogUpdateView(UpdateView):
         return reverse("dogs:dog_detail", kwargs={"pk": self.get_object().pk})
 
 
-class DogDeleteView(DeleteView):
+class DogDeleteView(LoginRequiredMixin, DeleteView):
     model = Dog
     template_name = "dogs/dog/detail.html"
     success_url = reverse_lazy("dogs:dogs_list")
@@ -120,11 +121,11 @@ class DogDeleteView(DeleteView):
         return response
 
 
-class DogDeleteConfirmView(DetailView):
+class DogDeleteConfirmView(LoginRequiredMixin, DetailView):
     model = Dog
     template_name = "dogs/dog_includes/confirm-delete-buttons.html"
 
 
-class DogDeleteAbort(DetailView):
+class DogDeleteAbort(LoginRequiredMixin, DetailView):
     model = Dog
     template_name = "dogs/dog_includes/dog-detail-buttons.html"
