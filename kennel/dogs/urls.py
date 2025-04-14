@@ -43,17 +43,17 @@ urlpatterns = [
     ),
     path(
         "dogs/delete/<int:pk>/",
-        views.dog_delete,
+        views.DogDeleteView.as_view(),
         name="dog_delete",
     ),
     path(
         "dogs/delete/confirm/<int:pk>/",
-        views.dog_delete_confirm,
+        views.DogDeleteConfirmView.as_view(),
         name="dog_delete_confirm",
     ),
     path(
         "dogs/delete/abort/<int:pk>/",
-        views.dog_delete_abort,
+        views.DogDeleteAbort.as_view(),
         name="dog_delete_abort",
     ),
 ]
