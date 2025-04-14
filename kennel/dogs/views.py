@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render, reverse, get_object_or_404
 from django.views.generic import (
     ListView,
@@ -12,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Breed, Dog
 from .forms import DogForm
+from config.core.mixins import HtmxRedirectMixin, IsOwnerOrAdminRequiredMixin
 
 
 def index(request):
@@ -92,7 +92,7 @@ class DogDetailView(DetailView):
         return context
 
 
-class DogUpdateView(LoginRequiredMixin, UpdateView):
+class DogUpdateView(LoginRequiredMixin, IsOwnerOrAdminRequiredMixin, UpdateView):
     model = Dog
     form_class = DogForm
     template_name = "dogs/dog/update.html"
@@ -104,7 +104,9 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
         return reverse("dogs:dog_detail", kwargs={"pk": self.get_object().pk})
 
 
-class DogDeleteView(LoginRequiredMixin, DeleteView):
+class DogDeleteView(
+    LoginRequiredMixin, IsOwnerOrAdminRequiredMixin, HtmxRedirectMixin, DeleteView
+):
     model = Dog
     template_name = "dogs/dog/detail.html"
     success_url = reverse_lazy("dogs:dogs_list")
@@ -112,16 +114,8 @@ class DogDeleteView(LoginRequiredMixin, DeleteView):
         "title": "Удалить собаку",
     }
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        if "HX-Request" in self.request.headers:
-            hx_response = HttpResponse()
-            hx_response["HX-Redirect"] = self.get_success_url()
-            return hx_response
-        return response
 
-
-class DogDeleteConfirmView(LoginRequiredMixin, DetailView):
+class DogDeleteConfirmView(LoginRequiredMixin, IsOwnerOrAdminRequiredMixin, DetailView):
     model = Dog
     template_name = "dogs/dog_includes/confirm-delete-buttons.html"
 

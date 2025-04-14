@@ -1,0 +1,28 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h3 class="modal-content__h3">Ошибка доступа</h3>
+    <p>У вас нет прав для выполнения этого действия.</p>
+    <button class="btn"
+            hx-get="{% url 'clear_modal' %}"
+            hx-target="#modals-container"
+            hx-swap="innerHTML"
+    >
+      Закрыть
+    </button>
+  </div>
+</div>
+
+{% block scripts %}
+  <script>
+      document.addEventListener('click', function (e) {
+          if (e.target.classList.contains('modal-overlay')) {
+              e.target.remove();
+          }
+          if (e.target.closest('button') && e.target.closest('button').getAttribute('hx-get') === "{% url 'clear_modal' %}") {
+              e.target.closest('.modal-overlay').remove();
+          }
+          e.target.closest('.modal-overlay').style.opacity = 0;
+          setTimeout(() => e.target.closest('.modal-overlay').remove(), 3000);
+      });
+  </script>
+{% endblock %}

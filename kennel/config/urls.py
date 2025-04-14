@@ -20,9 +20,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("dogs.urls", namespace="dogs")),
-    path("users/", include("users.urls", namespace="users")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+from .views import clear_modal
+
+urlpatterns = (
+    [
+        path("admin/", admin.site.urls),
+        path("clear-modal/", clear_modal, name="clear_modal"),
+        path("", include("dogs.urls", namespace="dogs")),
+        path("users/", include("users.urls", namespace="users")),
+    ]
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+)

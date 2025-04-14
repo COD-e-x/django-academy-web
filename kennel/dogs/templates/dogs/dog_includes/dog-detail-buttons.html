@@ -2,8 +2,9 @@
      class="dog-detail__group-btn"
 >
   <a class="btn dog-detail__item-btn"
-     href="{% url 'dogs:dog_update' dog.pk %}"
-     type="button"
+     hx-get="{% url 'dogs:dog_update' dog.pk %}"
+     hx-push-url="true"
+     hx-target="body"
   >
     Редактировать
   </a>
