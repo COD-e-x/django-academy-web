@@ -18,6 +18,12 @@
 
 
 - Homework completed for module 16/7
-  - Заменил в модели (users) все функциональные представления (FBV) на классы (CBV).
+  - Заменил в модели (users) все функциональные представления (FBV) на классы (CBV)
 
 - Homework completed for module 16/8
+  - Перевёл все представления dogs на классы (CBV)
+  - Обновил валидаторы в приложение dogs
+  - Настроил отображение родословной через formset
+  - Добавил LoginRequiredMixin, HtmxRedirectMixin и IsOwnerOrAdminRequiredMixin для контроля доступа
+  - Подключил favicon
+  - Добавил core.signals.py
