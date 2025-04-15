@@ -1,7 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Dog
+from .models import (
+    Dog,
+    DogParent,
+)
 from config.core.validators.common import (
     DateValidator,
     PhotoValidator,
@@ -44,3 +47,14 @@ class DogForm(forms.ModelForm):
         PhotoValidator.photo_extension(new_photo)
         PhotoValidator.delete_old_photo(self.instance, "photo", new_photo)
         return new_photo
+
+
+class DogParentForm(forms.ModelForm):
+    class Meta:
+        model = DogParent
+        fields = "__all__"
+        widgets = {
+            "birth_date": forms.DateInput(
+                attrs={"placeholder": "дд.мм.гггг", "class": "form-control"}
+            ),
+        }

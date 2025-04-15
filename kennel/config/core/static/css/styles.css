@@ -291,9 +291,9 @@ input::-ms-clear {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.form__title {
-    text-align: center;
-    font-size: 18px;
+.form__group-wrapper {
+    display: flex;
+    gap: 50px;
 }
 
 .form__group {
@@ -301,6 +301,11 @@ input::-ms-clear {
     flex-direction: column;
     gap: 15px;
     padding: 10px;
+}
+
+.form__title {
+    text-align: center;
+    font-size: 18px;
 }
 
 .form__group-label {
@@ -315,6 +320,11 @@ input::-ms-clear {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
+}
+
+.form__group-field input[type="checkbox"] {
+  width: auto !important;
+  margin-right: 10px;
 }
 
 .form__group-error {

@@ -8,9 +8,10 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import inlineformset_factory
 
-from .models import Breed, Dog
-from .forms import DogForm
+from .models import Breed, Dog, DogParent
+from .forms import DogForm, DogParentForm
 from config.core.mixins import HtmxRedirectMixin, IsOwnerOrAdminRequiredMixin
 
 
@@ -102,6 +103,30 @@ class DogUpdateView(LoginRequiredMixin, IsOwnerOrAdminRequiredMixin, UpdateView)
 
     def get_success_url(self):
         return reverse("dogs:dog_detail", kwargs={"pk": self.get_object().pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        DogParentFormset = inlineformset_factory(
+            Dog,
+            DogParent,
+            form=DogParentForm,
+            extra=1,
+        )
+        if self.request.method == "POST":
+            formset = DogParentFormset(self.request.POST, instance=self.object)
+        else:
+            formset = DogParentFormset(instance=self.object)
+        context["formset"] = formset
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context["formset"]
+        self.object = form.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+        return super().form_valid(form)
 
 
 class DogDeleteView(

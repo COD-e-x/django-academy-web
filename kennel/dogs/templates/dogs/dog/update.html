@@ -10,54 +10,69 @@
       Редактирование собаки: {{ dog.name }}
     </div>
     {% csrf_token %}
-    <div class="form__group">
-      {% for field in form %}
-        <div class="form__group-item">
-          {% if field.name == "photo" %}
-            <label class="form__group-label">
-              {{ field.label }}:{% if field.field.required %} *{% endif %}
-            </label>
-            <small id="form-dog__requirements"
-                   class="form__group-labels-requirements">
-              <br>* размер фото не более: 5MB, разрешённые форматы: .jpg, .jpeg, .png.
-            </small>
-          {% else %}
-            <label class="form__group-label">
-              {{ field.label }}:{% if field.field.required %} *{% endif %}
-            </label>
-          {% endif %}
-          <div class="form__group-field">
+    <div class="form__group-wrapper">
+      <div class="form__group">
+        {% for field in form %}
+          <div class="form__group-item">
             {% if field.name == "photo" %}
-              {% if dog.photo %}
-                <p>На данный момент: {{ dog.photo.name|shorten_filename:12 }}</p>
-              {% endif %}
-              <input type="file" name="photo" id="photo" onchange="previewImage(event)">
-              <div id="image-preview-container">
-                <img id="image-preview" src="" alt="">
-              </div>
+              <label class="form__group-label">
+                {{ field.label }}:{% if field.field.required %} *{% endif %}
+              </label>
+              <small id="form-dog__requirements"
+                     class="form__group-labels-requirements">
+                <br>* размер фото не более: 5MB, разрешённые форматы: .jpg, .jpeg, .png.
+              </small>
             {% else %}
-              {{ field }}
+              <label class="form__group-label">
+                {{ field.label }}:{% if field.field.required %} *{% endif %}
+              </label>
+            {% endif %}
+            <div class="form__group-field">
+              {% if field.name == "photo" %}
+                {% if dog.photo %}
+                  <p>На данный момент: {{ dog.photo.name|shorten_filename:12 }}</p>
+                {% endif %}
+                <input type="file" name="photo" id="photo" onchange="previewImage(event)">
+                <div id="image-preview-container">
+                  <img id="image-preview" src="" alt="">
+                </div>
+              {% else %}
+                {{ field }}
+              {% endif %}
+            </div>
+            {% if field.errors %}
+              <div class="form__group-error">
+                {{ field.errors }}
+              </div>
             {% endif %}
           </div>
-          {% if field.errors %}
-            <div class="form__group-error">
-              {{ field.errors }}
-            </div>
-          {% endif %}
+        {% endfor %}
+        <div class="form__group-btn">
+          <button class="btn form__btn"
+                  type="submit"
+          >
+            Сохранить
+          </button>
+          <a class="btn form__btn"
+             href="{% url "dogs:dog_detail" dog.pk %}"
+          >
+            Отмена
+          </a>
         </div>
-      {% endfor %}
-      <div class="form__group-btn">
-        <button class="btn form__btn"
-                type="submit"
-        >
-          Сохранить
-        </button>
-        <a class="btn form__btn"
-           href="{% url "dogs:dog_detail" dog.pk %}"
-        >
-          Отмена
-        </a>
       </div>
+    </div>
+    <div class="form__group">
+      <h2 style="text-align: center; font-weight: 600;">Родословная</h2>
+      <small style="text-align: center; color: #7e7979">Вы можете добавить родословную в этой форме.</small>
+      {{ formset.management_form }}
+      {% for form in formset.forms %}
+        <div class="form__group-field" style="align-items: end; text-align: left">
+          {{ form.as_p }}
+        </div>
+        {% if not forloop.last %}
+          <hr style="border: none; border-top: 2px solid #165cc6; margin: 1.5rem 0;">
+        {% endif %}
+      {% endfor %}
     </div>
   </form>
 {% endblock %}

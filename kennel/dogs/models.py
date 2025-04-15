@@ -65,3 +65,30 @@ class Dog(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.breed})"
+
+
+class DogParent(models.Model):
+    dog = models.ForeignKey(
+        Dog,
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(
+        max_length=30,
+        verbose_name="Имя родителя",
+    )
+    breed = models.ForeignKey(
+        Breed,
+        on_delete=models.CASCADE,
+        verbose_name="Порода",
+    )
+    birth_date = models.DateField(
+        **NULLABLE,
+        verbose_name="Дата рождения",
+    )
+
+    class Meta:
+        verbose_name = "Родитель собаки"
+        verbose_name_plural = "Родители собаки"
+
+    def __str__(self):
+        return f"{self.name} ({self.breed})"
