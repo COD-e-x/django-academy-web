@@ -17,7 +17,7 @@ urlpatterns = [
         name="breeds",
     ),
     path(
-        "breeds/<int:pk>/dogs/",
+        "breeds/<int:breed_id>/dogs/",
         views.dogs_by_breed,
         name="dogs_by_breed",
     ),

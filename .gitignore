@@ -31,7 +31,6 @@ build/
 
 # Секреты и ключи
 *.env
-.env.prod
 
 # Записи
 Notes/

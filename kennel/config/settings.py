@@ -161,6 +161,25 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "config/core/media")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
+# redis
+REDIS_URL = f"redis://{os.getenv('REDIS_HOST')}:{os.getenv('REDIS_PORT')}/{os.getenv('REDIS_DB')}"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL.replace(
+            f"/{os.getenv('REDIS_DB')}", f"/{os.getenv('REDIS_CACHE_DB')}"
+        ),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SOCKET_CONNECT_TIMEOUT": 10,
+        },
+        # "KEY_PREFIX": "myapp_prod",
+        "TIMEOUT": int(os.getenv("CACHE_TIMEOUT", 600)),
+        "DISABLED": os.getenv("CACHE_DISABLED", "False") == "True",
+    }
+}
+
 # Auth redirects
 LOGIN_REDIRECT_URL = "users:profile"
 LOGOUT_REDIRECT_URL = "dogs:index"
@@ -238,6 +257,16 @@ LOGGING = {
             "encoding": "utf-8",
             "delay": True,
         },
+        "redis_file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs/redis.log",
+            "formatter": "verbose",
+            "maxBytes": 5 * 1024 * 1024,
+            "backupCount": 3,
+            "encoding": "utf-8",
+            # "delay": True,
+        },
     },
     "loggers": {
         "django": {
@@ -253,6 +282,11 @@ LOGGING = {
         "django.security": {
             "handlers": ["security_file"],
             "level": "WARNING",
+            "propagate": False,
+        },
+        "django_redis": {
+            "handlers": ["redis_file"],
+            "level": "DEBUG",
             "propagate": False,
         },
     },

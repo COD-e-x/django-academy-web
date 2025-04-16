@@ -12,15 +12,10 @@
 
 ### СBV
 
-| Commit                               | Описание              |
-|--------------------------------------|-----------------------|
-| Homework completed for module 16/7   | Ветка - homework-16-7 |
-
-
-- Homework completed for module 16/7
+- Homework completed for module 16/7:
   - Заменил в модели (users) все функциональные представления (FBV) на классы (CBV)
 
-- Homework completed for module 16/8
+- Homework completed for module 16/8:
   - Перевёл все представления dogs на классы (CBV)
   - Обновил валидаторы в приложение dogs
   - Настроил отображение родословной через formset
@@ -28,4 +23,5 @@
   - Подключил favicon
   - Добавил core.signals.py
 
-- Homework completed for module 16/9 
+- Homework completed for module 16/9:
+  - Добавил Redis, класс CacheService в services.py для кеширования моделей breeds, dogs

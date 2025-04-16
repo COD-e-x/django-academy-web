@@ -12,7 +12,11 @@ from django.forms import inlineformset_factory
 
 from .models import Breed, Dog, DogParent
 from .forms import DogForm, DogParentForm
+from .services import CacheService
+
 from config.core.mixins import HtmxRedirectMixin, IsOwnerOrAdminRequiredMixin
+
+cache_service = CacheService()
 
 
 def index(request):
@@ -30,8 +34,9 @@ def index(request):
 
 def breeds_list(request):
     """Отображает список всех пород собак."""
+    breeds = cache_service.get_breeds_cache()
     context = {
-        "breeds": Breed.objects.all(),
+        "breeds": breeds,
         "title": "Питомник - Все наши породы",
     }
     return render(
@@ -41,13 +46,13 @@ def breeds_list(request):
     )
 
 
-def dogs_by_breed(request, pk: int):
+def dogs_by_breed(request, breed_id: int):
     """Отображает список собак для конкретной породы."""
-    breed = get_object_or_404(Breed, pk=pk)
+    breed = get_object_or_404(Breed, pk=breed_id)
+    dogs = cache_service.get_dogs_by_breed_cache(breed_id)
     context = {
-        "dogs": Dog.objects.filter(breed_id=pk),
+        "object_list": dogs,
         "title": f"Собаки породы - {breed.name}",
-        "breed_pk": breed.pk,
     }
     return render(
         request,
@@ -62,6 +67,9 @@ class DogListView(ListView):
     extra_context = {
         "title": "Питомник - Все наши собаки",
     }
+
+    def get_queryset(self):
+        return cache_service.get_dogs_cache()
 
 
 class DogCreateView(LoginRequiredMixin, CreateView):
