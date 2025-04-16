@@ -27,3 +27,5 @@
   - Добавил LoginRequiredMixin, HtmxRedirectMixin и IsOwnerOrAdminRequiredMixin для контроля доступа
   - Подключил favicon
   - Добавил core.signals.py
+
+- Homework completed for module 16/9 
