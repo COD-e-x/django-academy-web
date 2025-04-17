@@ -1,21 +1,54 @@
 import os
 
 from django.core.management import BaseCommand
-from ...models import User
 
 from dotenv import load_dotenv
+
+from users.models import User
+
 load_dotenv()
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        admin_user = User.objects.create(
-            email=f"{os.getenv('ADMIN_EMAIL')}",
+        admin = User.objects.create(
+            email=f"{os.getenv("ADMIN_EMAIL")}",
             first_name="Admin",
             last_name="Adminov",
+            role="admin",
             is_staff=True,
             is_superuser=True,
             is_active=True,
         )
 
-        admin_user.set_password(os.getenv("ADMIN_PASS"))
-        admin_user.save()
+        admin.set_password(os.getenv("ADMIN_PASS"))
+        admin.save()
+        print("Admin created")
+
+        moderator = User.objects.create(
+            email=f"{os.getenv("MODERATOR_EMAIL")}",
+            first_name="Moderator",
+            last_name="Moderatorov",
+            role="moderator",
+            is_staff=True,
+            is_superuser=False,
+            is_active=False,
+        )
+
+        admin.set_password(os.getenv("MODERATOR_PASS"))
+        admin.save()
+        print("Moderator created")
+
+        user = User.objects.create(
+            email=f"{os.getenv("USER_EMAIL")}",
+            first_name="User",
+            last_name="Userov",
+            role="user",
+            is_staff=False,
+            is_superuser=False,
+            is_active=False,
+        )
+
+        admin.set_password(os.getenv("USER_PASS"))
+        admin.save()
+        print("User created")
