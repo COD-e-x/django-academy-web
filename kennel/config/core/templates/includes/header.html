@@ -31,6 +31,13 @@
           {% endif %}
           <ul class="header__menu-list--icon header__menu-list">
             {% if user.is_authenticated %}
+              {% if user.is_superuser %}
+                <li class="header__menu-item">
+                  <a class="header__icon--admin header__icon" href="/admin/">
+                    <img class="header__icon-image" src="{% static 'images/icons/admin.svg' %}" alt="admin">
+                  </a>
+                </li>
+              {% endif %}
               <li class="header__menu-item">
                 <a class="header__icon--dog-add header__icon" href="{% url 'dogs:dog_create' %}">
                   <img class="header__icon-image" src="{% static 'images/icons/dog-add.svg' %}" alt="dog add">
