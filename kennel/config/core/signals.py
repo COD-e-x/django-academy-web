@@ -30,6 +30,8 @@ def clear_dog_by_breed_cache(sender, instance, **kwargs):
     """Очистка кэша собак по породе при изменении/удалении."""
     if instance.breed_id and is_cache_enabled():
         cache.delete(f"dogs_by_breed_{instance.breed_id}")
+        if cache.get(f"breed_{instance.breed_id}"):
+            cache.delete(f"breed_{instance.breed_id}")
 
 
 @receiver([post_save, post_delete], sender=Dog)

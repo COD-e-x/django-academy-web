@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from .apps import DogsConfig
 from . import views
@@ -8,17 +9,17 @@ app_name = DogsConfig.name
 urlpatterns = [
     path(
         "",
-        views.index,
+        cache_page(600)(views.index),
         name="index",
     ),
     path(
         "breeds/",
-        views.breeds_list,
+        views.BreedList.as_view(),
         name="breeds",
     ),
     path(
         "breeds/<int:breed_id>/dogs/",
-        views.dogs_by_breed,
+        views.DogsByBreed.as_view(),
         name="dogs_by_breed",
     ),
     path(

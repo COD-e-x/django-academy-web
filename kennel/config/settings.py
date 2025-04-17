@@ -257,16 +257,6 @@ LOGGING = {
             "encoding": "utf-8",
             "delay": True,
         },
-        "redis_file": {
-            "level": "DEBUG",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": BASE_DIR / "logs/redis.log",
-            "formatter": "verbose",
-            "maxBytes": 5 * 1024 * 1024,
-            "backupCount": 3,
-            "encoding": "utf-8",
-            # "delay": True,
-        },
     },
     "loggers": {
         "django": {
@@ -282,11 +272,6 @@ LOGGING = {
         "django.security": {
             "handlers": ["security_file"],
             "level": "WARNING",
-            "propagate": False,
-        },
-        "django_redis": {
-            "handlers": ["redis_file"],
-            "level": "DEBUG",
             "propagate": False,
         },
     },

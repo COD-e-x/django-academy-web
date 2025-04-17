@@ -23,13 +23,17 @@ class CacheService:
         return breed_list
 
     def get_dogs_by_breed_cache(self, breed_id: int):
-        """Кэширование списка собак по породе."""
-        key = f"dogs_by_breed_{breed_id}"
-        dogs = self.cache.get(key)
-        if dogs is None:
-            dogs = Dog.objects.filter(breed_id=breed_id)
-            self.cache.set(key, dogs, timeout=self.timeout)
-        return dogs
+        """Кэширование списка собак по породу и пароду."""
+        dogs_key = f"dogs_by_breed_{breed_id}"
+        breed_key = f"breed_{breed_id}"
+        dogs = self.cache.get(dogs_key)
+        breed = self.cache.get(breed_key)
+        if dogs is None or breed is None:
+            dogs = Dog.objects.filter(breed=breed_id)
+            breed = Breed.objects.get(pk=breed_id)
+            self.cache.set(dogs_key, dogs, timeout=self.timeout)
+            self.cache.set(breed_key, breed, timeout=self.timeout)
+        return dogs, breed
 
     def get_dogs_cache(self):
         """Кэширование списка собак."""

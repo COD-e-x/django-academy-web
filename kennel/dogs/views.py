@@ -22,7 +22,7 @@ cache_service = CacheService()
 def index(request):
     """Отображает главную страницу с перечнем первых 3-х пород."""
     context = {
-        "breeds": Breed.objects.all()[:3],
+        "object_list": Breed.objects.all()[:3],
         "title": "Питомник - Главная",
     }
     return render(
@@ -32,33 +32,33 @@ def index(request):
     )
 
 
-def breeds_list(request):
-    """Отображает список всех пород собак."""
-    breeds = cache_service.get_breeds_cache()
-    context = {
-        "breeds": breeds,
-        "title": "Питомник - Все наши породы",
-    }
-    return render(
-        request,
-        "dogs/breed/list.html",
-        context,
-    )
+class BreedList(ListView):
+    model = Breed
+    template_name = "dogs/breed/list.html"
+    extra_context = {"title": "Питомник - Все наши породы"}
+
+    def get_queryset(self):
+        return cache_service.get_breeds_cache()
 
 
-def dogs_by_breed(request, breed_id: int):
-    """Отображает список собак для конкретной породы."""
-    breed = get_object_or_404(Breed, pk=breed_id)
-    dogs = cache_service.get_dogs_by_breed_cache(breed_id)
-    context = {
-        "object_list": dogs,
-        "title": f"Собаки породы - {breed.name}",
-    }
-    return render(
-        request,
-        "dogs/dog/list.html",
-        context,
-    )
+class DogsByBreed(ListView):
+    model = Dog
+    template_name = "dogs/dog/list.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(breed_id=self.kwargs.get("breed_id"))
+        cache_service.get_dogs_by_breed_cache(self.kwargs.get("breed_id"))
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        dogs, breed = cache_service.get_dogs_by_breed_cache(self.kwargs.get("breed_id"))
+        context["object_list"] = dogs
+        context["breed"] = breed
+        context["title"] = (
+            f"Собаки породы - {breed.name}" if dogs else "Собаки этой породы не найдены"
+        )
+        return context
 
 
 class DogListView(ListView):
