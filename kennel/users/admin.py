@@ -8,6 +8,7 @@ from .models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "role",
         "last_name",
         "first_name",
         "email",
@@ -27,6 +28,7 @@ class UserAdmin(admin.ModelAdmin):
         "is_active",
         "phone",
         "telegram",
+        "role",
     )
     search_fields = (
         "email",
@@ -50,6 +52,7 @@ class UserAdmin(admin.ModelAdmin):
             None,
             {
                 "fields": (
+                    "role",
                     "first_name",
                     "last_name",
                     "email",

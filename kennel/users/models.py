@@ -5,8 +5,15 @@ NULLABLE = {"null": True, "blank": True}
 NULLABLE_FOR_STRING = {"null": False, "blank": True}
 
 
+class UserRole(models.TextChoices):
+    ADMIN = "admin", "Администратор"
+    MODERATOR = "moderator", "Модератор"
+    USER = "user", "Пользователь"
+
+
 class User(AbstractUser):
     """Модель для пользователя."""
+
     username = None
     first_name = models.CharField(
         max_length=30,
@@ -55,16 +62,12 @@ class User(AbstractUser):
         **NULLABLE_FOR_STRING,
         verbose_name="Адрес",
     )
-    # role = models.CharField(
-    #     max_length=20,
-    #     choices=[
-    #         ("user", _("Пользователь")),
-    #         ("moderator", _("Модератор")),
-    #         ("admin", _("Администратор")),
-    #     ],
-    #     default="user",
-    #     verbose_name=_("Роль"),
-    # )
+    role = models.CharField(
+        max_length=20,
+        choices=UserRole.choices,
+        default=UserRole.USER,
+        verbose_name="Роль",
+    )
     status = models.CharField(
         max_length=10,
         choices=[
