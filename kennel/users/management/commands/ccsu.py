@@ -32,11 +32,11 @@ class Command(BaseCommand):
             role="moderator",
             is_staff=True,
             is_superuser=False,
-            is_active=False,
+            is_active=True,
         )
 
-        admin.set_password(os.getenv("MODERATOR_PASS"))
-        admin.save()
+        moderator.set_password(os.getenv("MODERATOR_PASS"))
+        moderator.save()
         print("Moderator created")
 
         user = User.objects.create(
@@ -46,9 +46,9 @@ class Command(BaseCommand):
             role="user",
             is_staff=False,
             is_superuser=False,
-            is_active=False,
+            is_active=True,
         )
 
-        admin.set_password(os.getenv("USER_PASS"))
-        admin.save()
+        user.set_password(os.getenv("USER_PASS"))
+        user.save()
         print("User created")
