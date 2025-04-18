@@ -58,6 +58,10 @@ class Dog(models.Model):
         **NULLABLE,
         verbose_name="Хозяин",
     )
+    is_active = models.BooleanField(
+        default=False,
+        verbose_name="Активен",
+    )
 
     class Meta:
         verbose_name = "Собака"
@@ -65,6 +69,10 @@ class Dog(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    def activate(self):
+        self.is_active = True
+        self.save()
 
 
 class DogParent(models.Model):
