@@ -21,7 +21,9 @@ class DogAdmin(admin.ModelAdmin):
         "birth_date",
         "photo",
         "owner",
+        "is_active",
     )
+    list_editable = ("is_active",)
     list_filter = (
         "breed",
         "birth_date",

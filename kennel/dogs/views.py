@@ -15,7 +15,10 @@ from .forms import DogForm, DogParentForm
 from .services import CacheService
 from users.models import UserRole
 
-from config.core.mixins import HtmxRedirectMixin, IsOwnerOrAdminRequiredMixin
+from config.core.mixins import (
+    HtmxRedirectMixin,
+    IsOwnerOrAdminRequiredMixin,
+)
 
 cache_service = CacheService()
 
@@ -62,34 +65,38 @@ class DogsByBreed(ListView):
         return context
 
 
-class DogListView(ListView):
+class DogListView(HtmxRedirectMixin, ListView):
     model = Dog
-    template_name = "dogs/dog/list.html"
-    extra_context = {
-        "title": "Питомник - Все наши собаки",
-    }
+
+    def get_template_names(self):
+        if self.request.headers.get("Hx-Request") != "true":
+            return ["dogs/dog/list.html"]
+        return ["dogs/dog_includes/dog-list-inner.html"]
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(is_active=True)
-        cache_service.get_dogs_cache()
-        return queryset
-
-
-class DogDeactivatedListView(LoginRequiredMixin, ListView):
-    model = Dog
-    template_name = "dogs/dog/list.html"
-    extra_context = {
-        "title": "Неактивные собаки",
-    }
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        if self.request.user.role in [UserRole.MODERATOR, UserRole.ADMIN]:
-            queryset = queryset.filter(is_active=False)
-        if self.request.user.role == UserRole.USER:
+        if self.request.headers.get("Hx-Request") != "true":
+            queryset = queryset.filter(is_active=True)
+            cache_service.get_dogs_cache()
+            return queryset
+        active_param = self.request.GET.get("active")
+        user_roles = [role.value for role in UserRole]
+        if active_param == "1" and self.request.user.role in user_roles:
+            queryset = queryset.filter(is_active=True, owner=self.request.user)
+        elif active_param == "0" and self.request.user.role in user_roles:
             queryset = queryset.filter(is_active=False, owner=self.request.user)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        active_param = self.request.GET.get("active")
+        if active_param == "1":
+            context["title"] = "Активные"
+        elif active_param == "0":
+            context["title"] = "Неактивные"
+        else:
+            context["title"] = "Все наши собаки"
+        return context
 
 
 class DogCreateView(LoginRequiredMixin, CreateView):

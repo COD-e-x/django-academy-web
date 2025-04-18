@@ -279,6 +279,23 @@ input::-ms-clear {
     transform: translateY(1px);
 }
 
+/*===== btn 1 ========================================================================================================*/
+
+/*===== blue 1 blue =========================================================================================================*/
+.btn-1-blue {
+    color: #165cc6;
+    font-weight: 600;
+    margin: 0.6vw 0;
+    padding: 0.4rem 1rem;
+    border: 2px solid #165cc6;
+    border-radius: 10px;
+}
+
+.btn-1-blue:hover {
+    color: #fff;
+    background-color: #165cc6;
+}
+
 /*===== form =====================================================================================================*/
 
 .form {
@@ -323,8 +340,8 @@ input::-ms-clear {
 }
 
 .form__group-field input[type="checkbox"] {
-  width: auto !important;
-  margin-right: 10px;
+    width: auto !important;
+    margin-right: 10px;
 }
 
 .form__group-error {
