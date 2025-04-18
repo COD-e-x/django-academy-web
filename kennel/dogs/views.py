@@ -13,6 +13,7 @@ from django.forms import inlineformset_factory
 from .models import Breed, Dog, DogParent
 from .forms import DogForm, DogParentForm
 from .services import CacheService
+from users.models import UserRole
 
 from config.core.mixins import HtmxRedirectMixin, IsOwnerOrAdminRequiredMixin
 
@@ -69,7 +70,26 @@ class DogListView(ListView):
     }
 
     def get_queryset(self):
-        return cache_service.get_dogs_cache()
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_active=True)
+        cache_service.get_dogs_cache()
+        return queryset
+
+
+class DogDeactivatedListView(LoginRequiredMixin, ListView):
+    model = Dog
+    template_name = "dogs/dog/list.html"
+    extra_context = {
+        "title": "Неактивные собаки",
+    }
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.role in [UserRole.MODERATOR, UserRole.ADMIN]:
+            queryset = queryset.filter(is_active=False)
+        if self.request.user.role == UserRole.USER:
+            queryset = queryset.filter(is_active=False, owner=self.request.user)
+        return queryset
 
 
 class DogCreateView(LoginRequiredMixin, CreateView):
