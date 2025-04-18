@@ -163,22 +163,28 @@ AUTH_USER_MODEL = "users.User"
 
 # redis
 REDIS_URL = f"redis://{os.getenv('REDIS_HOST')}:{os.getenv('REDIS_PORT')}/{os.getenv('REDIS_DB')}"
+CACHE_ACTIVATED = os.getenv("CACHE_ACTIVATED", "False") == "True"
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL.replace(
-            f"/{os.getenv('REDIS_DB')}", f"/{os.getenv('REDIS_CACHE_DB')}"
-        ),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "SOCKET_CONNECT_TIMEOUT": 10,
-        },
-        # "KEY_PREFIX": "myapp_prod",
-        "TIMEOUT": int(os.getenv("CACHE_TIMEOUT", 600)),
-        "DISABLED": os.getenv("CACHE_DISABLED", "False") == "True",
+if CACHE_ACTIVATED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_URL.replace(
+                f"/{os.getenv('REDIS_DB')}", f"/{os.getenv('REDIS_CACHE_DB')}"
+            ),
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "SOCKET_CONNECT_TIMEOUT": 10,
+            },
+            "TIMEOUT": int(os.getenv("CACHE_TIMEOUT", 600)),
+        }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
 
 # Auth redirects
 LOGIN_REDIRECT_URL = "users:profile"
