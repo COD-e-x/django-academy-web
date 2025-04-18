@@ -4,7 +4,7 @@
 {% block content %}
   <section class="dog-list">
     <div class="container">
-      {% if user.is_authenticated %}
+      {% if user.is_authenticated and request.path == '/dogs/'%}
         <button class="btn-1-blue"
                 hx-get="{% url 'dogs:dogs_list' %}?active=1"
                 hx-target="#dog-list"

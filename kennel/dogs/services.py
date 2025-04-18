@@ -29,7 +29,7 @@ class CacheService:
         dogs = self.cache.get(dogs_key)
         breed = self.cache.get(breed_key)
         if dogs is None or breed is None:
-            dogs = Dog.objects.filter(breed=breed_id)
+            dogs = Dog.objects.filter(is_active=True, breed=breed_id)
             breed = Breed.objects.get(pk=breed_id)
             self.cache.set(dogs_key, dogs, timeout=self.timeout)
             self.cache.set(breed_key, breed, timeout=self.timeout)
