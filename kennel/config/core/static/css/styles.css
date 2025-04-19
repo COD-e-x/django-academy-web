@@ -158,10 +158,11 @@ input::-ms-clear {
 
 .header__menu-list--icon {
     display: flex;
+    align-items: flex-end;
+    justify-content: center;
     gap: 10px;
     padding: 5px;
     flex-direction: row;
-    justify-content: flex-end;
 }
 
 .header__user-info--auth {
@@ -196,9 +197,9 @@ input::-ms-clear {
     .header__content {
         display: flex;
         justify-content: center;
-        padding: 20px 0;
         align-items: center;
         flex-wrap: wrap;
+        padding: 20px 0;
     }
 
     .header__nav {
@@ -223,15 +224,7 @@ input::-ms-clear {
         gap: 15px;
     }
 
-    @media (max-width: 500px) {
-        .header__menu-list--text {
-            flex-direction: column;
-            gap: 15px;
-        }
-    }
-
     .header__menu-list--icon {
-        justify-content: flex-start;
         margin-top: 15px;
     }
 
