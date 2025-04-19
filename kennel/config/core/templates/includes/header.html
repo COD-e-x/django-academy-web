@@ -5,6 +5,11 @@
       <a class="header__logo logo" href="{% url 'dogs:index' %}">
         <img class="logo__image" src="{% static 'images/logo.svg' %}" alt="logo">
       </a>
+      <button class="header__menu-toggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <nav class="header__nav">
         <ul class="header__menu-list--text header__menu-list">
           <li class="header__menu-item">
@@ -70,3 +75,50 @@
     </div>
   </div>
 </header>
+
+
+{% block scripts %}
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const menuToggle = document.querySelector('.header__menu-toggle');
+          const nav = document.querySelector('.header__nav');
+          const header = document.querySelector('.header');
+
+          function closeMenu() {
+              menuToggle.classList.remove('active');
+              nav.classList.remove('active');
+              document.body.classList.remove('no-scroll');
+              menuToggle.setAttribute('aria-expanded', 'false');
+          }
+
+          menuToggle.addEventListener('click', function (e) {
+              e.stopPropagation();
+              const isOpen = this.classList.contains('active');
+
+              if (isOpen) {
+                  closeMenu();
+              } else {
+                  this.classList.add('active');
+                  nav.classList.add('active');
+                  document.body.classList.add('no-scroll');
+                  this.setAttribute('aria-expanded', 'true');
+              }
+          });
+          document.addEventListener('click', function (e) {
+              if (!header.contains(e.target) && nav.classList.contains('active')) {
+                  closeMenu();
+              }
+          });
+          window.addEventListener('scroll', function () {
+              if (nav.classList.contains('active')) {
+                  closeMenu();
+              }
+          });
+          window.addEventListener('resize', function () {
+              if (window.innerWidth > 992 && nav.classList.contains('active')) {
+                  closeMenu();
+              }
+          });
+      });
+  </script>
+{% endblock %}

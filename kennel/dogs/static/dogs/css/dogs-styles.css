@@ -6,10 +6,8 @@
 
 .dog-list__list {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
-    text-align: left;
-    padding: 35px 0 50px 0;
+    grid-template-columns: 1fr;
+    gap: 20px;
 }
 
 .dog-list__item {
@@ -105,4 +103,23 @@
 
 #form-dog__requirements {
     color: #165cc6;
+}
+
+
+@media (min-width: 480px) {
+    .dog-list__list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .dog-list__list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .dog-list__list {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }

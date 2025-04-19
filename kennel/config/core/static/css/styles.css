@@ -80,16 +80,16 @@ input::-ms-clear {
 /*===== custom style =================================================================================================*/
 
 .wrapper {
-    min-width: 1000px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    min-width: 375px;
 }
 
 .container {
-    max-width: 1220px;
+    width: 100%;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 10px;
+    padding: 0 16px;
 }
 
 /*===== header =======================================================================================================*/
@@ -167,7 +167,7 @@ input::-ms-clear {
 .header__user-info--auth {
     display: flex;
     justify-content: right;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .header__icon--user-profile {
@@ -187,6 +187,106 @@ input::-ms-clear {
     transform: translate(0%, 0%);
 }
 
+.logo__image {
+    height: 88px;
+}
+
+
+@media (max-width: 768px) {
+    .header__content {
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .header__nav {
+        width: 100%;
+        order: 3;
+        margin-top: 20px;
+        flex-direction: column;
+        gap: 15px;
+        display: none;
+    }
+
+    .header__nav.active {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .header__menu-list--text {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    @media (max-width: 500px) {
+        .header__menu-list--text {
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
+
+    .header__menu-list--icon {
+        justify-content: flex-start;
+        margin-top: 15px;
+    }
+
+    .header__user-info--auth {
+        justify-content: flex-start;
+    }
+
+    .header__menu-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 17px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .header__menu-toggle span {
+        display: block;
+        width: 100%;
+        height: 2px;
+        background: #fff;
+        transition: all 0.3s;
+    }
+
+    .header__menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .header__menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .header__menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .header__content {
+        justify-content: space-between;
+    }
+
+    .header__logo {
+        order: 1;
+    }
+
+    .header__menu-toggle {
+        order: 2;
+    }
+
+    .logo__image {
+        height: 55px;
+    }
+}
 
 /*===== footer =======================================================================================================*/
 
@@ -219,8 +319,20 @@ input::-ms-clear {
 .app {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 40px;
     margin-bottom: 50px;
+}
+
+@media (max-width: 522px) {
+    .app {
+        align-content: center;
+        flex-direction: column;
+    }
+
+    .app__item {
+        text-align: center;
+    }
 }
 
 .footer__copy {
@@ -281,11 +393,11 @@ input::-ms-clear {
 
 /*===== btn 1 ========================================================================================================*/
 
-/*===== blue 1 blue =========================================================================================================*/
+/*===== blue 1 blue ==================================================================================================*/
 .btn-1-blue {
     color: #165cc6;
     font-weight: 600;
-    margin: 0.6vw 0;
+    margin: 0.5rem 0;
     padding: 0.4rem 1rem;
     border: 2px solid #165cc6;
     border-radius: 10px;
@@ -296,7 +408,7 @@ input::-ms-clear {
     background-color: #165cc6;
 }
 
-/*===== form =====================================================================================================*/
+/*===== form =========================================================================================================*/
 
 .form {
     max-width: 400px;

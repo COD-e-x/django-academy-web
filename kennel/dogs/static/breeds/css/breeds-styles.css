@@ -6,19 +6,15 @@
 
 .breeds-list__list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    text-align: left;
-    padding: 35px 0 50px 0;
+    grid-template-columns: 1fr;
+    gap: 20px;
 }
 
 .breeds-list__item {
     max-width: 400px;
     min-width: 200px;
-    /*width: 70%;*/
     display: flex;
     flex-direction: column;
-    /*flex-wrap: wrap;*/
     justify-content: space-between;
     align-items: flex-start;
     border: 1px solid #ddd;
@@ -63,4 +59,17 @@
     margin: 10px 5px;
     font-weight: 500;
     letter-spacing: 0.8px;
+}
+
+
+@media (min-width: 480px) {
+    .breeds-list__list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .breeds-list__list {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
