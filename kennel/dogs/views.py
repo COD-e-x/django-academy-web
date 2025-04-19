@@ -24,7 +24,11 @@ cache_service = CacheService()
 
 
 def index(request):
-    """Отображает главную страницу с перечнем первых 3-х пород."""
+    """
+    Отображает главную страницу сайта. (временно, буду переделывать)
+    Возвращает шаблон с первыми тремя породами собак.
+    """
+
     context = {
         "object_list": Breed.objects.all()[:3],
         "title": "Питомник - Главная",
@@ -37,6 +41,11 @@ def index(request):
 
 
 class BreedList(ListView):
+    """
+    Отображает список всех пород собак.
+    Использует кэширование для оптимизации запросов.
+    """
+
     model = Breed
     template_name = "dogs/breed/list.html"
     extra_context = {"title": "Питомник - Все наши породы"}
@@ -46,6 +55,12 @@ class BreedList(ListView):
 
 
 class DogsByBreed(ListView):
+    """
+    Отображает список собак определенной породы.
+    Возвращает сообщение, если собаки данной породы не найдены.
+    Использует кэширование для оптимизации запросов.
+    """
+
     model = Dog
     template_name = "dogs/dog/list.html"
 
@@ -64,6 +79,13 @@ class DogsByBreed(ListView):
 
 
 class DogListView(HtmxRedirectMixin, ListView):
+    """
+    Отображает список собак с учетом фильтрации по активности.
+    Поддерживает HTMX-запросы для динамического обновления контента.
+    Разделяет отображение для обычных и HTMX-запросов.
+    Использует кэширование для оптимизации запросов.
+    """
+
     model = Dog
 
     def get_template_names(self):
@@ -98,6 +120,11 @@ class DogListView(HtmxRedirectMixin, ListView):
 
 
 class DogCreateView(LoginRequiredMixin, CreateView):
+    """
+    Создает новую карточку собаки.
+    Автоматически устанавливает текущего пользователя как владельца.
+    """
+
     model = Dog
     form_class = DogForm
     template_name = "dogs/dog/create.html"
@@ -116,6 +143,10 @@ class DogCreateView(LoginRequiredMixin, CreateView):
 
 
 class DogDetailView(DetailView):
+    """
+    Отображает детальную информацию о конкретной собаке.
+    """
+
     model = Dog
     template_name = "dogs/dog/detail.html"
 
@@ -127,6 +158,12 @@ class DogDetailView(DetailView):
 
 
 class DogUpdateView(LoginRequiredMixin, IsOwnerOrAdminRequiredMixin, UpdateView):
+    """
+    Обновляет информацию о собаке.
+    Включает обработку формы родителей собаки через formset.
+    Доступно только владельцу или администратору.
+    """
+
     model = Dog
     form_class = DogForm
     template_name = "dogs/dog/update.html"
@@ -165,6 +202,12 @@ class DogUpdateView(LoginRequiredMixin, IsOwnerOrAdminRequiredMixin, UpdateView)
 class DogDeleteView(
     LoginRequiredMixin, IsOwnerOrAdminRequiredMixin, HtmxRedirectMixin, DeleteView
 ):
+    """
+    Удаляет карточку собаки.
+    Поддерживает HTMX-запросы для динамического удаления.
+    Доступно только владельцу или администратору.
+    """
+
     model = Dog
     template_name = "dogs/dog/detail.html"
     success_url = reverse_lazy("dogs:dogs_list")
@@ -174,10 +217,21 @@ class DogDeleteView(
 
 
 class DogDeleteConfirmView(LoginRequiredMixin, IsOwnerOrAdminRequiredMixin, DetailView):
+    """
+    Отображает подтверждение удаления собаки.
+    Показывает кнопки подтверждения/отмены удаления.
+    Доступно только владельцу или администратору.
+    """
+
     model = Dog
     template_name = "dogs/dog_includes/confirm-delete-buttons.html"
 
 
 class DogDeleteAbort(LoginRequiredMixin, DetailView):
+    """
+    Отображает стандартные кнопки управления карточкой собаки.
+    Используется при отмене удаления.
+    """
+
     model = Dog
     template_name = "dogs/dog_includes/dog-detail-buttons.html"
